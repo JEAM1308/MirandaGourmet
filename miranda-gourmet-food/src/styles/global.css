@@ -1,0 +1,10 @@
+
+.hero-container{
+    background:
+        radial-gradient(900px 400px at 10% 10%, rgba(0,0,0,0.06), transparent 60%),
+        radial-gradient(700px 350px at 90% 20%, rgba(0,0,0,0.05), transparent 55%),    
+        linear-gradient(180deg, #ffffff, #fafafa);
+}
+/*
+
+*/

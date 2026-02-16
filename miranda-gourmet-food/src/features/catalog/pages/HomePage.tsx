@@ -6,15 +6,8 @@ export default function HomePage() {
     <div className="py-2">
       {/* HERO */}
       <Card className="border-0 shadow-sm overflow-hidden">
-        <div
-          style={{
-            background:
-              "radial-gradient(900px 400px at 10% 10%, rgba(0,0,0,0.06), transparent 60%)," +
-              "radial-gradient(700px 350px at 90% 20%, rgba(0,0,0,0.05), transparent 55%)," +
-              "linear-gradient(180deg, #ffffff, #fafafa)",
-          }}
-        >
-          <Container className="py-5">
+        <div className="hero-container">
+          <Container className="py-5" >
             <Row className="align-items-center g-4">
               <Col lg={7}>
                 <div className="text-uppercase small text-muted fw-semibold mb-2">
@@ -37,13 +30,13 @@ export default function HomePage() {
 
                 <div className="d-flex flex-column flex-sm-row gap-2">
                     <Link to="/corporativos" className="btn btn-dark btn-lg">
-                        Ver servicios corporativos
+                        Servicios corporativos
                     </Link>
                     <Link to="/familiares" className="btn btn-outline-dark btn-lg">
-                        Ver eventos familiares
+                        Eventos familiares
                     </Link>
                     <Link to="/quote" className="btn btn-outline-secondary btn-lg">
-                        Cotizar evento
+                        Evento personalizado
                     </Link>
                 </div>
 
@@ -115,7 +108,7 @@ export default function HomePage() {
                             Explorar servicios
                         </Link>
                         <Link to="/cart" className="btn btn-outline-dark btn-lg">
-                            Ver servicios corporativos
+                            Ir al carrito
                         </Link>
                     </div>
 
