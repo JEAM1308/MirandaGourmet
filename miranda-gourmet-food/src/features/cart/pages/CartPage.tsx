@@ -8,6 +8,7 @@ import { validateCartForCheckout } from "../state/cart.validators";
 
 import type { Offering } from "../../catalog/types/offering.types";
 import { offeringsMock } from "../../catalog/data/offerings.mock";
+import { createCheckoutSession } from "../../checkout/services/checkout.api";
 
 function formatCOPFromCents(amountCents: number) {
   const amount = amountCents / 100;
@@ -43,8 +44,14 @@ export default function CartPage() {
     setIsCheckingOut(true);
     try {
       // TODO (cuando integremos Stripe):
-      // const { url } = await createCheckoutSession({ items: state.items });
-      // window.location.href = url;
+      const { url } = await createCheckoutSession({
+            items: state.items.map((i) => ({
+                offeringId: i.offeringId,
+                quantity: i.quantity,
+                selection: i.selection,
+            })),
+        });
+      window.location.href = url;
 
       // Placeholder útil mientras conectamos serverless
       console.log("Checkout payload (TODO serverless):", {
