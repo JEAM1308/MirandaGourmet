@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Alert, Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useCart } from "../hooks/useCart";
 import { cartTotals } from "../state/cart.logic";
@@ -8,7 +8,9 @@ import { validateCartForCheckout } from "../state/cart.validators";
 
 import type { Offering } from "../../catalog/types/offering.types";
 import { offeringsMock } from "../../catalog/data/offerings.mock";
-import { createCheckoutSession } from "../../checkout/services/checkout.api";
+
+import { startCheckout } from "../../payments/services/payments.services";
+import { env } from "../../../app/config/env";
 
 function formatCOPFromCents(amountCents: number) {
   const amount = amountCents / 100;
@@ -20,7 +22,6 @@ function formatCOPFromCents(amountCents: number) {
 }
 
 export default function CartPage() {
-  const navigate = useNavigate();
   const { state, dispatch } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
@@ -42,34 +43,20 @@ export default function CartPage() {
     if (!validation.ok || state.items.length === 0) return;
 
     setIsCheckingOut(true);
+
     try {
-      // TODO (cuando integremos Stripe):
-      const { url } = await createCheckoutSession({
-            items: state.items.map((i) => ({
-                offeringId: i.offeringId,
-                quantity: i.quantity,
-                selection: i.selection,
-            })),
-        });
+      const { url } = await startCheckout(state.items);
       window.location.href = url;
-
-      // Placeholder útil mientras conectamos serverless
-      console.log("Checkout payload (TODO serverless):", {
-        items: state.items.map((i) => ({
-          offeringId: i.offeringId,
-          quantity: i.quantity,
-          selection: i.selection,
-        })),
-      });
-
-      navigate("/checkout/success");
     } catch (err) {
       console.error(err);
-      alert("No se pudo iniciar el pago. Intenta de nuevo.");
+      alert("No se pudo iniciar el pago. Verifica la configuración del proveedor.");
     } finally {
       setIsCheckingOut(false);
     }
   };
+
+  const providerLabel =
+    env.paymentProvider === "wompi" ? "Pagar con Wompi" : "Pagar con Stripe";
 
   return (
     <Container className="py-4">
@@ -93,9 +80,10 @@ export default function CartPage() {
         <Card className="p-4">
           <div className="text-center">
             <div className="h5 mb-2">Tu carrito está vacío</div>
-            <div className="text-muted mb-3">Cuando agregues un servicio, aparecerá aquí.</div>
+            <div className="text-muted mb-3">
+              Cuando agregues un servicio, aparecerá aquí.
+            </div>
 
-            {/* Evitamos `Button as={Link}` para no pelear con typings */}
             <Link to="/" className="btn btn-primary">
               Ver catálogo
             </Link>
@@ -153,28 +141,39 @@ export default function CartPage() {
                             {item.selection.variantId && (
                               <div>
                                 <span className="text-muted">Variante:</span>{" "}
-                                <span className="fw-semibold">{item.selection.variantId}</span>
+                                <span className="fw-semibold">
+                                  {item.selection.variantId}
+                                </span>
                               </div>
                             )}
 
                             {typeof item.selection.people === "number" && (
                               <div>
                                 <span className="text-muted">Personas:</span>{" "}
-                                <span className="fw-semibold">{item.selection.people}</span>
+                                <span className="fw-semibold">
+                                  {item.selection.people}
+                                </span>
                               </div>
                             )}
 
                             {item.selection.dateISO && (
                               <div>
                                 <span className="text-muted">Fecha:</span>{" "}
-                                <span className="fw-semibold">{item.selection.dateISO}</span>
+                                <span className="fw-semibold">
+                                  {item.selection.dateISO}
+                                </span>
                               </div>
                             )}
 
                             {item.selection.address && (
-                              <div className="text-truncate" style={{ maxWidth: 420 }}>
+                              <div
+                                className="text-truncate"
+                                style={{ maxWidth: 420 }}
+                              >
                                 <span className="text-muted">Dirección:</span>{" "}
-                                <span className="fw-semibold">{item.selection.address}</span>
+                                <span className="fw-semibold">
+                                  {item.selection.address}
+                                </span>
                               </div>
                             )}
                           </div>
@@ -183,12 +182,19 @@ export default function CartPage() {
                     </Col>
 
                     <Col xs={12} md={2}>
-                      <Form.Label className="text-muted small mb-1">Cantidad</Form.Label>
+                      <Form.Label className="text-muted small mb-1">
+                        Cantidad
+                      </Form.Label>
                       <div className="d-flex gap-2 align-items-center">
                         <Button
                           variant="outline-secondary"
                           size="sm"
-                          onClick={() => dispatch({ type: "DECREMENT", payload: { id: item.id } })}
+                          onClick={() =>
+                            dispatch({
+                              type: "DECREMENT",
+                              payload: { id: item.id },
+                            })
+                          }
                           disabled={isCheckingOut}
                         >
                           −
@@ -200,7 +206,10 @@ export default function CartPage() {
                           onChange={(e) =>
                             dispatch({
                               type: "SET_QTY",
-                              payload: { id: item.id, quantity: Number(e.target.value) },
+                              payload: {
+                                id: item.id,
+                                quantity: Number(e.target.value),
+                              },
                             })
                           }
                           inputMode="numeric"
@@ -209,7 +218,12 @@ export default function CartPage() {
                         <Button
                           variant="outline-secondary"
                           size="sm"
-                          onClick={() => dispatch({ type: "INCREMENT", payload: { id: item.id } })}
+                          onClick={() =>
+                            dispatch({
+                              type: "INCREMENT",
+                              payload: { id: item.id },
+                            })
+                          }
                           disabled={isCheckingOut}
                         >
                           +
@@ -220,13 +234,21 @@ export default function CartPage() {
                     <Col xs={12} md={3} className="text-md-end">
                       <div className="text-muted small mb-1">Subtotal</div>
                       <div className="fw-semibold">
-                        {formatCOPFromCents((item.estimatedUnitPriceCents ?? 0) * item.quantity)}
+                        {formatCOPFromCents(
+                          (item.estimatedUnitPriceCents ?? 0) *
+                            item.quantity
+                        )}
                       </div>
 
                       <Button
                         variant="link"
                         className="px-0 mt-2"
-                        onClick={() => dispatch({ type: "REMOVE_ITEM", payload: { id: item.id } })}
+                        onClick={() =>
+                          dispatch({
+                            type: "REMOVE_ITEM",
+                            payload: { id: item.id },
+                          })
+                        }
                         disabled={isCheckingOut}
                       >
                         Quitar
@@ -243,18 +265,24 @@ export default function CartPage() {
               <Card.Body>
                 <div className="d-flex justify-content-between align-items-center mb-2">
                   <div className="text-muted">Subtotal estimado</div>
-                  <div className="fw-semibold">{formatCOPFromCents(totals.subtotalCents)}</div>
+                  <div className="fw-semibold">
+                    {formatCOPFromCents(totals.subtotalCents)}
+                  </div>
                 </div>
 
                 <div className="text-muted small mb-3">
-                  El total final se calcula en el checkout (Stripe) según precios oficiales.
+                  El total final se calcula en el checkout según precios oficiales.
                 </div>
 
                 <Button
                   variant="primary"
                   className="w-100"
                   onClick={onCheckout}
-                  disabled={!validation.ok || state.items.length === 0 || isCheckingOut}
+                  disabled={
+                    !validation.ok ||
+                    state.items.length === 0 ||
+                    isCheckingOut
+                  }
                 >
                   {isCheckingOut ? (
                     <>
@@ -262,11 +290,14 @@ export default function CartPage() {
                       Iniciando pago…
                     </>
                   ) : (
-                    "Pagar con Stripe"
+                    providerLabel
                   )}
                 </Button>
 
-                <Link to="/" className="btn btn-outline-secondary w-100 mt-2">
+                <Link
+                  to="/"
+                  className="btn btn-outline-secondary w-100 mt-2"
+                >
                   Seguir comprando
                 </Link>
               </Card.Body>

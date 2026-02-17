@@ -38,7 +38,7 @@ export default function HomePage() {
                         Eventos familiares
                     </Link>
                     <Link to="/quote" className="btn btn-outline-warning btn-lg">
-                        Evento personalizado
+                        Eventos personalizados
                     </Link>
                 </div>
 
