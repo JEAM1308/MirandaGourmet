@@ -1,0 +1,91 @@
+.navbar {
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35));
+}
+
+.toggle {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.nav {
+  gap: 2px;
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.72) !important;
+  padding: 10px 12px !important;
+  border-radius: 12px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.navLink:hover {
+  color: rgba(255, 255, 255, 0.92) !important;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.active {
+  color: rgba(255, 255, 255, 0.92) !important;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cartBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+
+  transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.cartBtn:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(198, 168, 91, 0.35);
+  transform: translateY(-1px);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.cartIcon {
+  font-size: 1.1rem;
+}
+
+.cartBadge {
+  position: absolute !important;
+  top: -8px;
+  right: -8px;
+
+  background: rgba(198, 168, 91, 0.95) !important;
+  color: #0b0e13 !important;
+
+  border: 2px solid rgba(0, 0, 0, 0.45);
+  font-weight: 700;
+}

@@ -12,10 +12,14 @@ import OrderDetailsPage from "../../features/orders/pages/OrderDetailPage";
 
 function ComingSoon({ title }: { title: string }) {
   return (
-    <div>
-      <h1 className="h4">{title}</h1>
-      <p className="text-muted mb-0">En construcción.</p>
-    </div>
+    <section className="pageSection">
+      <h1 className="">
+        {title}
+      </h1>
+      <h3 className="text-muted mb-0">
+        En construcción.
+      </h3>
+    </section>
   );
 }
 

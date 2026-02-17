@@ -59,7 +59,7 @@ export default function CartPage() {
     env.paymentProvider === "wompi" ? "Pagar con Wompi" : "Pagar con Stripe";
 
   return (
-    <section className="page-section">
+    <section className="pageSection">
       <Container className="py-4">
         <Row className="align-items-center mb-3">
           <Col>

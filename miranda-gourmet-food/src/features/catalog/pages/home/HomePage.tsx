@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <section
       id="home"
-      className={`${styles.pageSection} d-flex align-items-center`}
+      className="pageSection d-flex align-items-center"
       style={{ backgroundImage: `url("/assets/bg/home.png")` }}
     >
       <div className={styles.sectionOverlay} />
