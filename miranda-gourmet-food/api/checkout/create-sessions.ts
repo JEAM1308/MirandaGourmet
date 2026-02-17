@@ -3,6 +3,8 @@ import crypto from "crypto";
 import Stripe from "stripe";
 
 import { catalog, type CatalogOffering } from "../_data/offerings.catalog";
+import { saveCheckout } from "../_data/checkout.store";
+import { OrderItemSnapshot } from "../../src/shared/types/order.types";
 
 type ProviderId = "stripe" | "wompi";
 
@@ -290,9 +292,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       const amountInCents = computeWompiTotalAmount(body.items);
-
+      
       // Referencia única recomendada por Wompi :contentReference[oaicite:3]{index=3}
       const reference = `MGF-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
+      
+      const itemsSnapshot: OrderItemSnapshot[] = body.items.map((i) => ({
+        offeringId: i.offeringId,
+        title: "TODO: traer título del catálogo",
+        quantity: i.quantity,
+        unitPriceCents: 0, // aquí deberías resolverlo del catálogo
+        selection: i.selection,
+      }));
+
+      saveCheckout({
+        reference,
+        provider: "wompi",
+        items: itemsSnapshot,
+        totalAmountCents: amountInCents,
+        createdAtISO: new Date().toISOString(),
+      });
 
       const url = createWompiRedirectUrl({
         siteUrl,

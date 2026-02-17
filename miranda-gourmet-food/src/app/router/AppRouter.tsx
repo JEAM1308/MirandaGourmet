@@ -26,7 +26,6 @@ export default function AppRouter() {
         <Route path="/corporativos" element={<ComingSoon title="Corporativos" />} />
         <Route path="/familiares" element={<ComingSoon title="Eventos familiares" />} />
         <Route path="/quote" element={<ComingSoon title="Cotizar" />} />
-
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
         <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
