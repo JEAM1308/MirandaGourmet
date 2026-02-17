@@ -2,6 +2,8 @@
 
 /* layout */
 @import "../app/layout/navbar/app-navbar.css";
+@import "../app/layout/shell/app-shell.css";
+@import "../app/layout/footer/app-footer.css";
 
 /* pages */
 @import "../features/catalog/pages/home/home.css";

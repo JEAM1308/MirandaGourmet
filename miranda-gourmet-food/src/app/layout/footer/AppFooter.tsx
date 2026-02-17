@@ -1,46 +1,79 @@
 import { Container, Row, Col } from "react-bootstrap";
-import styles from "./AppFooter.module.css";
+import { Link } from "react-router-dom";
 import { BsWhatsapp, BsEnvelope, BsGeo } from "react-icons/bs";
+
 export default function AppFooter() {
   const year = new Date().getFullYear();
 
+  const waText = encodeURIComponent(
+    "Hola Miranda Gourmet, quiero más información sobre sus servicios."
+  );
+
   return (
-    <footer className={styles.footer}>
-      <div className={styles.footerOverlay} />
-      <Container className={styles.footerContent}>
+    <footer className="foot-root">
+      <div className="foot-overlay" />
+
+      <Container className="foot-content">
         <Row className="gy-4">
           <Col md={6}>
-            <div className={styles.brand}>
-              Miranda Gourmet Food
-            </div>
-            <div className={styles.tagline}>
+            <div className="foot-brand">Miranda Gourmet Food</div>
+            <div className="foot-tagline">
               Experiencias gastronómicas para eventos corporativos y familiares.
             </div>
           </Col>
 
           <Col md={3}>
-            <div className={styles.sectionTitle}>Servicios</div>
-            <ul className={styles.linkList}>
-              <li><a href="/corporativos">Corporativos</a></li>
-              <li><a href="/familiares">Familiares</a></li>
-              <li><a href="/quote">Eventos personalizados</a></li>
+            <div className="foot-sectionTitle">Servicios</div>
+            <ul className="foot-linkList">
+              <li>
+                <Link to="/corporativos" className="foot-link">
+                  Corporativos
+                </Link>
+              </li>
+              <li>
+                <Link to="/familiares" className="foot-link">
+                  Familiares
+                </Link>
+              </li>
+              <li>
+                <Link to="/quote" className="foot-link">
+                  Eventos personalizados
+                </Link>
+              </li>
             </ul>
           </Col>
 
           <Col md={3}>
-            <div className={styles.sectionTitle}>Contacto</div>
-            <ul className={styles.linkList}>
-              <li> <a href={`https://wa.me/573014577319?text=${encodeURIComponent("Hola Miranda Gourmet, quiero más información sobre sus servicios.")}`}> <BsWhatsapp/> Escríbenos por WhatsApp </a> </li>
-              <li> <a href="#"> <BsEnvelope/> contacto@mirandagourmet.com</a> </li>
-              <li> <BsGeo/> Bogotá, Colombia</li>
+            <div className="foot-sectionTitle">Contacto</div>
+            <ul className="foot-linkList">
+              <li>
+                <a
+                  className="foot-link"
+                  href={`https://wa.me/573014577319?text=${waText}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <BsWhatsapp /> Escríbenos por WhatsApp
+                </a>
+              </li>
+
+              <li>
+                <a className="foot-link" href="mailto:contacto@mirandagourmet.com">
+                  <BsEnvelope /> contacto@mirandagourmet.com
+                </a>
+              </li>
+
+              <li className="foot-metaLine">
+                <BsGeo /> Bogotá, Colombia
+              </li>
             </ul>
           </Col>
         </Row>
 
-        <div className={styles.bottomBar}>
-          <div>© {year} — Miranda Gourmet Food</div>
-          <div className={styles.devCredit}>
-            Developed by <span>JEAM Dev</span>
+        <div className="foot-bottomBar">
+          <div className="foot-meta">© {year} — Miranda Gourmet Food</div>
+          <div className="foot-meta">
+            Developed by <span className="foot-dev">JEAM Dev</span>
           </div>
         </div>
       </Container>

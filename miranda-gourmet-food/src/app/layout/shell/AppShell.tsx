@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import AppNavbar from "../navbar/AppNavbar";
 import AppFooter from "../footer/AppFooter";
-import  "./app-shell.css";
 
 export default function AppShell() {
   return (

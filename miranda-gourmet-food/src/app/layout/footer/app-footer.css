@@ -1,0 +1,110 @@
+.foot-root {
+  position: relative;
+  background: linear-gradient(180deg, #0b0e13 0%, #07080a 100%);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.92);
+}
+
+.foot-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(198,168,91,0.10), transparent 60%),
+    radial-gradient(700px 380px at 90% 30%, rgba(255,255,255,0.04), transparent 55%),
+    linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.35));
+}
+
+.foot-content {
+  position: relative;
+  z-index: 1;
+  padding: 28px 0 18px;
+}
+
+.foot-brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.92);
+}
+
+.foot-tagline {
+  margin-top: 8px;
+  color: rgba(255,255,255,0.65);
+  max-width: 52ch;
+  line-height: 1.45;
+}
+
+.foot-sectionTitle {
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 10px;
+}
+
+.foot-linkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: rgba(255,255,255,0.70);
+}
+
+.foot-linkList li {
+  margin-bottom: 10px;
+}
+
+.foot-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,0.70);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.foot-link:hover {
+  color: rgba(255,255,255,0.92);
+  transform: translateY(-1px);
+}
+
+.foot-metaLine {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,0.70);
+}
+
+.foot-bottomBar {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.foot-meta {
+  color: rgba(255,255,255,0.60);
+  font-size: 0.85rem;
+}
+
+.foot-dev {
+  color: rgba(255,255,255,0.86);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 576px) {
+  .foot-content {
+    padding: 22px 0 16px;
+  }
+
+  .foot-bottomBar {
+    margin-top: 14px;
+    padding-top: 12px;
+  }
+}
