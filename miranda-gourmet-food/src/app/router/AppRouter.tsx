@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import AppLayout from "../layout/AppLayout";
+import AppShell from "../layout/AppShell";
 import CartPage from "../../features/cart/pages/CartPage";
 import CheckoutSuccessPage from "../../features/checkout/pages/CheckoutSuccessPage";
 import CheckoutCancelPage from "../../features/checkout/pages/CheckoutCancelPage";
@@ -22,7 +22,7 @@ function ComingSoon({ title }: { title: string }) {
 export default function AppRouter() {
   return (
     <Routes>
-      <Route element={<AppLayout />}>
+      <Route element={<AppShell />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/corporativos" element={<ComingSoon title="Corporativos" />} />
         <Route path="/familiares" element={<ComingSoon title="Eventos familiares" />} />
