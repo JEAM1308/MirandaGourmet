@@ -6,7 +6,8 @@ import CheckoutCancelPage from "../../features/checkout/pages/CheckoutCancelPage
 import PayWompiPage from "../../features/payments/pages/PayWompiPage";
 import WompiResultPage from "../../features/payments/pages/WompiResultPage";
 
-import HomePage from "../../features/catalog/pages/HomePage";
+import HomePage from "../../features/catalog/pages/home/HomePage";
+import OrderDetailsPage from "../../features/orders/pages/OrderDetailPage";
 
 
 function ComingSoon({ title }: { title: string }) {
@@ -31,6 +32,7 @@ export default function AppRouter() {
         <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
         <Route path="/pay/wompi" element={<PayWompiPage />} />
         <Route path="/checkout/wompi-result" element={<WompiResultPage />} />
+        <Route path="/orders/:id" element={<OrderDetailsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

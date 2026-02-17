@@ -32,12 +32,16 @@ export default function WompiResultPage() {
       try {
         setLoading(true);
 
-        const res = await fetch(
-          `/api/payments/wompi/transactions/${transactionId}`
-        );
-
+        const res = await fetch( `/api/payments/wompi/transactions/${transactionId}` );
         const data = await res.json();
-
+    
+        const orderId = typeof data.orderId === "string" ? data.orderId : null;
+        
+        if (orderId) {
+          window.location.href = `/orders/${orderId}`;
+          return;
+        }
+        
         if (cancelled) return;
 
         const s = data.status as TransactionStatus;
