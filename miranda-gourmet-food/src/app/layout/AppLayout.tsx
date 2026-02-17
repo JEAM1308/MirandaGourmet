@@ -85,6 +85,7 @@ export default function AppLayout() {
     const base: React.CSSProperties = {
       minHeight: "100vh",
       backgroundColor: bg.color ?? "#ffffff",
+      position: "relative",
     };
 
     if (bg.imageUrl) {

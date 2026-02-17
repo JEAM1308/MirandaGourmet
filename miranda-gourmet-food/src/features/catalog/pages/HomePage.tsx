@@ -1,63 +1,75 @@
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { BsShieldCheck, BsPersonFillGear, BsStar } from "react-icons/bs";
 
 export default function HomePage() {
   return (
     <div className="py-2">
       {/* HERO */}
-      <Card className="border-0 shadow-sm overflow-hidden">
-        <div className="hero-container">
+      <Card className="border-0 shadow-sm overflow-hidden glass-card">
+          <div className="glass-dark">
           <Container className="py-5" >
             <Row className="align-items-center g-4">
               <Col lg={7}>
-                <div className="text-uppercase small text-muted fw-semibold mb-2">
+                <div className="text-uppercase small fw-semibold mb-2"
+                style={{color: "gray"}}
+                >
                   Catering corporativo · experiencias familiares
                 </div>
 
-                <h1 className="display-6 fw-semibold lh-sm mb-3">
+                <h1 className="display-6 fw-semibold lh-sm mb-3 text-white">
                   Experiencias gastronómicas{" "}
                   <span style={{ textDecoration: "underline", textUnderlineOffset: 6 }}>
                     memorables
                   </span>
                   , sin complicaciones.
                 </h1>
-
-                <p className="text-muted fs-5 mb-4" style={{ maxWidth: 640 }}>
-                  Desde <strong>Lunch Box</strong> para reuniones ejecutivas hasta{" "}
-                  <strong>Experiencias de Gala</strong> y eventos familiares. Selecciona tu servicio,
-                  configura detalles y paga con Stripe de forma segura.
-                </p>
-
+                <ul className="fs-6 mb-4" style={{ maxWidth: 640, color: "gray" }}>
+                  <li><strong>12 años de experiencia</strong></li>
+                  <li><strong>Experiencias de Gala</strong> </li>
+                  <li>eventos familiares</li>
+                </ul>
+                
                 <div className="d-flex flex-column flex-sm-row gap-2">
-                    <Link to="/corporativos" className="btn btn-dark btn-lg">
+                    <Link to="/corporativos" className="btn btn-outline-warning btn-lg">
                         Servicios corporativos
                     </Link>
-                    <Link to="/familiares" className="btn btn-outline-dark btn-lg">
+                    <Link to="/familiares" className="btn btn-outline-warning btn-lg">
                         Eventos familiares
                     </Link>
-                    <Link to="/quote" className="btn btn-outline-secondary btn-lg">
+                    <Link to="/quote" className="btn btn-outline-warning btn-lg">
                         Evento personalizado
                     </Link>
                 </div>
 
                 {/* Trust points */}
-                <Row className="g-2 mt-4" style={{ maxWidth: 720 }}>
+                <Row className="mt-4 d-flex align-items-center" style={{ maxWidth: 720 }}>
+                  <p className="text-white d-flex justify-content-center">
+                    ¿Por qué elegirnos?
+                  </p>
+                </Row>
+                <Row className="g-2" style={{ maxWidth: 720 }}>
                   <Col md={4}>
-                    <Card className="h-100 border-0 bg-white shadow-sm">
+                    <Card className="h-100 border-0 shadow-sm"
+                    style={{background: "gray"}}>
                       <Card.Body className="p-3">
-                        <div className="fw-semibold mb-1">Pago seguro</div>
-                        <div className="text-muted small">
-                          Stripe Checkout con validación server-side.
+                        <div className="fw-semibold mb-1 d-flex align-items-center gap-1 text-black"> 
+                          <BsShieldCheck /> Pago seguro
+                        </div>
+                        <div className="small">
+                          Stripe Checkout con validación.
                         </div>
                       </Card.Body>
                     </Card>
                   </Col>
-
                   <Col md={4}>
-                    <Card className="h-100 border-0 bg-white shadow-sm">
+                    <Card className="h-100 border-0 shadow-sm"
+                    style={{background: "gray"}}>
                       <Card.Body className="p-3">
-                        <div className="fw-semibold mb-1">Personalizable</div>
-                        <div className="text-muted small">
+                        <div className="fw-semibold mb-1 d-flex align-items-center gap-1 text-black"> 
+                          <BsPersonFillGear/> Personalizable
+                        </div>
+                        <div className="small">
                           Personas, fecha, dirección y add-ons por servicio.
                         </div>
                       </Card.Body>
@@ -65,10 +77,13 @@ export default function HomePage() {
                   </Col>
 
                   <Col md={4}>
-                    <Card className="h-100 border-0 bg-white shadow-sm">
+                    <Card className="h-100 border-0 shadow-sm"
+                    style={{background: "gray"}}>
                       <Card.Body className="p-3">
-                        <div className="fw-semibold mb-1">Para empresas y familia</div>
-                        <div className="text-muted small">
+                        <div className="fw-semibold mb-1 d-flex align-items-center gap-1 text-black"> 
+                          <BsStar/> Excelente servicio
+                        </div>
+                        <div className="small">
                           Diseñado para alta calidad, logística y detalle.
                         </div>
                       </Card.Body>
@@ -76,7 +91,6 @@ export default function HomePage() {
                   </Col>
                 </Row>
               </Col>
-
               {/* Visual card derecha */}
               <Col lg={5}>
                 <Card className="border-0 shadow-sm">
@@ -119,8 +133,9 @@ export default function HomePage() {
                 </Card>
               </Col>
             </Row>
+            
           </Container>
-        </div>
+      </div>
       </Card>
 
       {/* BLOQUE CATEGORÍAS */}
@@ -128,21 +143,22 @@ export default function HomePage() {
         <Row className="g-3">
           <Col md={6}>
             <CategoryCard
-              title="Corporativos"
-              desc="Reuniones ejecutivas, eventos y entregas para equipos."
+              title="Nuestros clientes"
+              desc="Conoce con quienes hemos trabajado."
               to="/corporativos"
-              variant="dark"
+              variant="outline-light"
             />
           </Col>
           <Col md={6}>
             <CategoryCard
-              title="Eventos familiares"
-              desc="Chef incógnito, experiencias de gala y celebraciones."
+              title="Nosotros"
+              desc="Conoce quiénes somos y nuestra historia."
               to="/familiares"
-              variant="outline-dark"
+              variant="outline-light"
             />
           </Col>
         </Row>
+        
       </Container>
     </div>
   );
@@ -181,28 +197,29 @@ function CategoryCard({
   title: string;
   desc: string;
   to: string;
-  variant: "dark" | "outline-dark";
+  variant: string;
 }) {
   return (
-    <Card className="h-100 border-0 shadow-sm">
+    <Card className="h-100 border-0 shadow-sm glass-card">
       <Card.Body className="p-4">
         <div className="d-flex justify-content-between align-items-start gap-3">
           <div>
-            <div className="h5 mb-1">{title}</div>
-            <div className="text-muted">{desc}</div>
+            <div className="h5 mb-1 text-white">{title}</div>
+            <div style={{color: "white"}}>{desc}</div>
           </div>
           <div
             style={{
-              width: 44,
-              height: 44,
+              width: 50,
+              height: 50,
               borderRadius: 14,
-              background: "rgba(0,0,0,0.06)",
+              background: "rgba(0,0,0,0.5)",
             }}
           />
-        </div>
+
+          </div>
 
         <div className="mt-3">
-            <Link to={to} className={`btn ${variant === "dark" ? "btn-dark" : "btn-outline-dark"}`}>
+            <Link to={to} className={`btn btn-${variant}`}>
                 Explorar
             </Link>
         </div>
