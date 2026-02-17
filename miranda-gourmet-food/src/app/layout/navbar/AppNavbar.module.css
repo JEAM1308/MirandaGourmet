@@ -1,7 +1,7 @@
 .navbar {
-  background: rgba(0, 0, 0, 0.62);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -88,4 +88,36 @@
 
   border: 2px solid rgba(0, 0, 0, 0.45);
   font-weight: 700;
+}
+/* En móvil: links con fondo y separación, para que se pueda tocar fácil */
+@media (max-width: 576px) {
+  .nav {
+    padding-top: 10px;
+    gap: 6px;
+  }
+
+  .navLink {
+    padding: 12px 12px !important; /* tap target */
+    border-radius: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .actions {
+    margin-top: 10px;
+    padding-bottom: 6px;
+  }
+
+  .cartBtn {
+    width: 100%;
+    justify-content: center;
+    height: 46px;
+    border-radius: 14px;
+  }
+
+  .cartBadge {
+    top: 50% !important;
+    right: 14px !important;
+    transform: translateY(-50%);
+  }
 }

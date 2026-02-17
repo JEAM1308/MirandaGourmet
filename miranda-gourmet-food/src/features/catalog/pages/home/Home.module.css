@@ -1,8 +1,19 @@
+.pageSection {
+  min-height: calc(100vh - var(--nav-height, 72px));
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  background-image: url("/public/assets/bg/home.png");
+}
+
+
 .sectionOverlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(900px 500px at 15% 10%, rgba(198,168,91,0.10), transparent 60%),
-              linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.75));
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(198,168,91,0.10), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.75));
 }
 
 .sectionContent {
@@ -14,13 +25,14 @@
   width: 100%;
 }
 
+/* Wrapper principal (mobile-first) */
 .glassWrap {
   background: rgba(0,0,0,0.55);
   border: 1px solid rgba(255,255,255,0.10);
   border-radius: 20px;
   backdrop-filter: blur(8px);
-  padding: 2rem;
   box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  padding: 1.1rem; /* base móvil */
 }
 
 .eyebrow {
@@ -37,18 +49,20 @@
 .lead {
   color: rgba(255,255,255,0.78);
   max-width: 52ch;
+  font-size: 1rem; /* base móvil */
 }
 
 .bullets {
   color: rgba(255,255,255,0.65);
 }
 
+/* Card derecha (mobile-first) */
 .sideCard {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 16px;
   backdrop-filter: blur(10px);
-  padding: 1.25rem;
+  padding: 1rem; /* base móvil */
 }
 
 .stepBubble {
@@ -62,4 +76,45 @@
   justify-content: center;
   font-weight: 600;
   flex: 0 0 auto;
+}
+
+/* -----------------------
+   Mobile adjustments
+------------------------ */
+@media (max-width: 576px) {
+  /* reduce el impacto del h1 */
+  .homeHeader h1 {
+    font-size: 2.05rem;
+    line-height: 1.15;
+  }
+
+  /* Botones full width */
+  .homeHeader :global(.btn-lg) {
+    width: 100%;
+  }
+
+  .sideCard {
+    margin-top: 12px;
+  }
+}
+
+/* -----------------------
+   Desktop enhancements
+------------------------ */
+@media (min-width: 992px) {
+  .pageSection {
+    padding: 28px 0;
+  }
+
+  .glassWrap {
+    padding: 2rem;
+  }
+
+  .lead {
+    font-size: 1.125rem;
+  }
+
+  .sideCard {
+    padding: 1.25rem;
+  }
 }

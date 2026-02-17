@@ -44,7 +44,9 @@
   /* Focus */
   --focus-ring: 0 0 0 0.2rem rgba(212, 175, 55, 0.28);
 }
-
+@media (max-width: 576px) {
+  :root { --nav-height: 64px; }
+}
 /* -------------------------
    Base / Reset
 -------------------------- */
@@ -199,4 +201,9 @@ a:hover {
 /* Make bootstrap text-muted readable on dark */
 .text-muted {
   color: var(--text-muted) !important;
+}
+
+
+button, .btn, a {
+  -webkit-tap-highlight-color: transparent;
 }

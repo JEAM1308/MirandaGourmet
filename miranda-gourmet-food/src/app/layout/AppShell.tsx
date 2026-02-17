@@ -1,14 +1,17 @@
 import { Outlet } from "react-router-dom";
 import AppNavbar from "./navbar/AppNavbar";
 import AppFooter from "./footer/AppFooter";
+import styles from "./AppShell.module.css";
 
 export default function AppShell() {
   return (
-    <div className="app-shell">
+    <div className={styles.shell}>
       <AppNavbar />
-      <main className="app-main">
+
+      <div className={styles.pageWrapper}>
         <Outlet />
-      </main>
+      </div>
+
       <AppFooter />
     </div>
   );
