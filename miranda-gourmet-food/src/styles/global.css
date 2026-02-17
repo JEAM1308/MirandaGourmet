@@ -85,16 +85,6 @@ a {
   text-decoration: none;
 }
 
-.pageSection {
-  position: relative;
-  min-height: 100vh;
-  padding: 96px 0 72px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: #fff;
-}
-
 a:hover {
   text-decoration: none;
 }

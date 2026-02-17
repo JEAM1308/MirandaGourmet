@@ -1,4 +1,4 @@
-.pageSection {
+.home-page {
   min-height: calc(100vh - var(--nav-height, 72px));
   background-position: center;
   background-size: cover;
@@ -7,8 +7,7 @@
   background-image: url("/assets/bg/home.png");
 }
 
-
-.sectionOverlay {
+.home-overlay {
   position: absolute;
   inset: 0;
   background:
@@ -16,56 +15,54 @@
     linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.75));
 }
 
-.sectionContent {
+.home-content {
   position: relative;
   z-index: 1;
 }
 
-.homeHeader {
+.home-header {
   width: 100%;
 }
 
-/* Wrapper principal (mobile-first) */
-.glassWrap {
+.home-glass {
   background: rgba(0,0,0,0.55);
   border: 1px solid rgba(255,255,255,0.10);
   border-radius: 20px;
   backdrop-filter: blur(8px);
   box-shadow: 0 20px 60px rgba(0,0,0,0.45);
-  padding: 1.1rem; /* base móvil */
+  padding: 1.1rem;
 }
 
-.eyebrow {
+.home-eyebrow {
   color: rgba(255,255,255,0.65);
   letter-spacing: 0.06em;
 }
 
-.underlineAccent {
+.home-underline {
   text-decoration: underline;
   text-underline-offset: 6px;
   text-decoration-color: rgba(198,168,91,0.9);
 }
 
-.lead {
+.home-lead {
   color: rgba(255,255,255,0.78);
   max-width: 52ch;
-  font-size: 1rem; /* base móvil */
+  font-size: 1rem;
 }
 
-.bullets {
+.home-bullets {
   color: rgba(255,255,255,0.65);
 }
 
-/* Card derecha (mobile-first) */
-.sideCard {
+.home-sideCard {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 16px;
   backdrop-filter: blur(10px);
-  padding: 1rem; /* base móvil */
+  padding: 1rem;
 }
 
-.stepBubble {
+.home-stepBubble {
   width: 34px;
   height: 34px;
   border-radius: 999px;
@@ -78,43 +75,35 @@
   flex: 0 0 auto;
 }
 
-/* -----------------------
-   Mobile adjustments
------------------------- */
 @media (max-width: 576px) {
-  /* reduce el impacto del h1 */
-  .homeHeader h1 {
+  .home-header h1 {
     font-size: 2.05rem;
     line-height: 1.15;
   }
 
-  /* Botones full width */
-  .homeHeader :global(.btn-lg) {
+  .home-header .btn-lg {
     width: 100%;
   }
 
-  .sideCard {
+  .home-sideCard {
     margin-top: 12px;
   }
 }
 
-/* -----------------------
-   Desktop enhancements
------------------------- */
 @media (min-width: 992px) {
-  .pageSection {
+  .home-page {
     padding: 28px 0;
   }
 
-  .glassWrap {
+  .home-glass {
     padding: 2rem;
   }
 
-  .lead {
+  .home-lead {
     font-size: 1.125rem;
   }
 
-  .sideCard {
+  .home-sideCard {
     padding: 1.25rem;
   }
 }

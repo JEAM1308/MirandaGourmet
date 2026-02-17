@@ -1,55 +1,55 @@
-.navbar {
+.nav-navbar {
   background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.brand {
+.nav-brand {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.logo {
+.nav-logo {
   display: block;
   object-fit: contain;
   filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35));
 }
 
-.toggle {
+.nav-toggle {
   border-color: rgba(255, 255, 255, 0.15) !important;
 }
 
-.nav {
+.nav-links {
   gap: 2px;
 }
 
-.navLink {
+.nav-linkItem {
   color: rgba(255, 255, 255, 0.72) !important;
   padding: 10px 12px !important;
   border-radius: 12px;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-.navLink:hover {
+.nav-linkItem:hover {
   color: rgba(255, 255, 255, 0.92) !important;
   background: rgba(255, 255, 255, 0.06);
 }
 
-.active {
+.nav-linkItem.active {
   color: rgba(255, 255, 255, 0.92) !important;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.10);
 }
 
-.actions {
+.nav-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.cartBtn {
+.nav-cartBtn {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -67,18 +67,18 @@
   transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
-.cartBtn:hover {
+.nav-cartBtn:hover {
   background: rgba(255, 255, 255, 0.10);
   border-color: rgba(198, 168, 91, 0.35);
   transform: translateY(-1px);
   color: rgba(255, 255, 255, 0.92);
 }
 
-.cartIcon {
+.nav-cartIcon {
   font-size: 1.1rem;
 }
 
-.cartBadge {
+.nav-cartBadge {
   position: absolute !important;
   top: -8px;
   right: -8px;
@@ -89,33 +89,34 @@
   border: 2px solid rgba(0, 0, 0, 0.45);
   font-weight: 700;
 }
-/* En móvil: links con fondo y separación, para que se pueda tocar fácil */
+
+/* Mobile */
 @media (max-width: 576px) {
-  .nav {
+  .nav-links {
     padding-top: 10px;
     gap: 6px;
   }
 
-  .navLink {
-    padding: 12px 12px !important; /* tap target */
+  .nav-linkItem {
+    padding: 12px 12px !important;
     border-radius: 14px;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.06);
   }
 
-  .actions {
+  .nav-actions {
     margin-top: 10px;
     padding-bottom: 6px;
   }
 
-  .cartBtn {
+  .nav-cartBtn {
     width: 100%;
     justify-content: center;
     height: 46px;
     border-radius: 14px;
   }
 
-  .cartBadge {
+  .nav-cartBadge {
     top: 50% !important;
     right: 14px !important;
     transform: translateY(-50%);

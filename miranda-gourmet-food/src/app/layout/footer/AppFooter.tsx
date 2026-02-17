@@ -1,6 +1,6 @@
 import { Container, Row, Col } from "react-bootstrap";
 import styles from "./AppFooter.module.css";
-
+import { BsWhatsapp, BsEnvelope, BsGeo } from "react-icons/bs";
 export default function AppFooter() {
   const year = new Date().getFullYear();
 
@@ -30,14 +30,15 @@ export default function AppFooter() {
           <Col md={3}>
             <div className={styles.sectionTitle}>Contacto</div>
             <ul className={styles.linkList}>
-              <li>contacto@mirandagourmet.com</li>
-              <li>Bogotá, Colombia</li>
+              <li> <a href={`https://wa.me/573014577319?text=${encodeURIComponent("Hola Miranda Gourmet, quiero más información sobre sus servicios.")}`}> <BsWhatsapp/> Escríbenos por WhatsApp </a> </li>
+              <li> <a href="#"> <BsEnvelope/> contacto@mirandagourmet.com</a> </li>
+              <li> <BsGeo/> Bogotá, Colombia</li>
             </ul>
           </Col>
         </Row>
 
         <div className={styles.bottomBar}>
-          <div>© {year} Miranda Gourmet Food</div>
+          <div>© {year} — Miranda Gourmet Food</div>
           <div className={styles.devCredit}>
             Developed by <span>JEAM Dev</span>
           </div>

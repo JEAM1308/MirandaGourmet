@@ -1,0 +1,186 @@
+/* =========================
+   CORPORATIVOS (GLOBAL CSS)
+   Namespace: corp-
+========================= */
+
+.corp-page {
+  position: relative;
+  padding: 18px 0;
+  min-height: 100svh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.corp-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(198,168,91,0.10), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.80));
+}
+
+.corp-content {
+  position: relative;
+  z-index: 1;
+}
+
+.corp-glass {
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  padding: 1.1rem;
+}
+
+.corp-eyebrow {
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.06em;
+}
+
+.corp-underline {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-color: rgba(198,168,91,0.9);
+}
+
+.corp-lead {
+  color: rgba(255,255,255,0.78);
+  max-width: 60ch;
+  font-size: 1rem;
+}
+
+.corp-glassCard {
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 16px !important;
+}
+
+.corp-highlightTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: rgba(198,168,91,0.9);
+}
+
+.corp-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+}
+
+.corp-sideCard {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  padding: 1rem;
+}
+
+.corp-checkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: rgba(255,255,255,0.78);
+}
+
+.corp-checkList li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.corp-checkList svg {
+  margin-top: 2px;
+  flex: 0 0 auto;
+  opacity: 0.9;
+}
+
+/* sections */
+.corp-section {
+  padding: 56px 0;
+}
+
+.corp-sectionTight {
+  padding: 36px 0;
+}
+
+/* IMPORTANT: forzar look premium (evita blanco Bootstrap) */
+.corp-packageCard {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  backdrop-filter: blur(8px);
+  border-radius: 18px;
+  color: rgba(255,255,255,0.92);
+}
+
+.corp-badge {
+  background: rgba(198,168,91,0.95) !important;
+  color: #0b0e13 !important;
+  border: 1px solid rgba(0,0,0,0.35) !important;
+}
+
+.corp-bullets {
+  color: rgba(255,255,255,0.72);
+}
+
+.corp-glassPanel {
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  color: rgba(255,255,255,0.92);
+}
+
+.corp-quote {
+  color: rgba(255,255,255,0.86);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.corp-ctaCard {
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(198,168,91,0.10), transparent 60%),
+    rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  color: rgba(255,255,255,0.92);
+}
+
+.corp-stepBubble {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #111;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  flex: 0 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .corp-glass { padding: 1rem; }
+  .corp-section { padding: 40px 0; }
+  .corp-sectionTight { padding: 28px 0; }
+  .corp-sideCard { margin-top: 12px; }
+
+  /* botones grandes full width */
+  .corp-glass .btn-lg { width: 100%; }
+}
+
+@media (min-width: 992px) {
+  .corp-page { padding: 28px 0; }
+  .corp-glass { padding: 2rem; }
+  .corp-lead { font-size: 1.125rem; }
+  .corp-sideCard { padding: 1.25rem; }
+}

@@ -1,0 +1,8 @@
+@import "./global.css";
+
+/* layout */
+@import "../app/layout/navbar/app-navbar.css";
+
+/* pages */
+@import "../features/catalog/pages/home/home.css";
+@import "../features/catalog/pages/corporativos/corporativos.css";

@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import AppShell from "../layout/AppShell";
+import AppShell from "../layout/shell/AppShell";
 import CartPage from "../../features/cart/pages/CartPage";
 import CheckoutSuccessPage from "../../features/checkout/pages/CheckoutSuccessPage";
 import CheckoutCancelPage from "../../features/checkout/pages/CheckoutCancelPage";
