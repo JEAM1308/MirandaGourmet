@@ -73,7 +73,7 @@ export default function AppFooter() {
         <div className="foot-bottomBar">
           <div className="foot-meta">© {year} — Miranda Gourmet Food</div>
           <div className="foot-meta">
-            Developed by <span className="foot-dev">JEAM Dev</span>
+            Developed by <span className="foot-dev metal-gold">JEAM Dev</span>
           </div>
         </div>
       </Container>

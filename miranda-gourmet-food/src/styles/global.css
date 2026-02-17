@@ -47,6 +47,48 @@
 @media (max-width: 576px) {
   :root { --nav-height: 64px; }
 }
+.metal-silver {
+  font-weight: bold;
+  font-family: 'Arial Black', sans-serif;
+  background: linear-gradient(
+    to bottom,
+    #cfd0d3 0%,
+    #ffffff 20%,
+    #6d6d6d 45%,
+    #ffffff 50%,
+    #cfd0d3 100%
+  );
+  
+  /* Compatibilidad total */
+  -webkit-background-clip: text; /* Para Chrome, Safari, Edge */
+  background-clip: text;         /* Propiedad estándar para Firefox y futuro */
+  -webkit-text-fill-color: transparent;
+  color: transparent;            /* Fallback */
+  
+  filter: drop-shadow(2px 2px 1px rgba(0,0,0,0.3));
+}
+
+.metal-gold {
+  font-weight: bold;
+  font-family: 'Arial Black', sans-serif;
+  background: linear-gradient(
+    to bottom,
+    #bf953f,
+    #fcf6ba,
+    #b38728,
+    #fbf5b7,
+    #aa771c
+  );
+  
+  /* Compatibilidad total */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  
+  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.4));
+}
+
 /* -------------------------
    Base / Reset
 -------------------------- */
