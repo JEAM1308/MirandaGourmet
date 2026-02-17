@@ -22,7 +22,7 @@ export default function AppNavbar() {
   const count = useMemo(() => cartCount(state.items), [state.items]);
 
   return (
-    <Navbar bg="light" expand="lg" sticky="top">
+    <Navbar bg="dark" variant="dark" expand="md" fixed="top">
       <Container>
         <Navbar.Brand as={Link} to="/" className="fw-semibold">
           <BrandLogo/> 
@@ -44,7 +44,7 @@ export default function AppNavbar() {
 
           <Nav>
             <Nav.Link as={NavLink} to="/cart" className="d-flex align-items-center gap-2">
-                <Button variant="outline-dark">
+                <Button variant="outline-light">
                     <BsCart/>
                     {count > 0 && (
                         <Badge bg="dark" pill>

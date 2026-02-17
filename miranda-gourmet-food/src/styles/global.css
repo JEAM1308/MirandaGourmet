@@ -68,6 +68,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+}
 
 /* Prefer Bootstrap defaults, but improve readability on dark */
 a {
@@ -76,11 +85,13 @@ a {
 }
 
 .pageSection {
-  min-height: calc(100vh - 72px); /* ajusta según altura de navbar */
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
   position: relative;
+  min-height: 100vh;
+  padding: 96px 0 72px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #fff;
 }
 
 a:hover {
