@@ -1,30 +1,29 @@
 export type CatalogOffering = {
   id: string;
   title: string;
-
   type: "STANDARD_SERVICE" | "PREMIUM_SERVICE" | "QUOTE_SERVICE";
 
   pricing:
     | { kind: "STRIPE_PRICE"; stripePriceId: string }
-    | { kind: "STRIPE_VARIANTS"; variants: Record<string, string> } // variantId -> priceId
+    | { kind: "STRIPE_VARIANTS"; variants: Record<string, string> }
     | { kind: "QUOTE" };
 
-  // Add-ons (addonId -> stripePriceId)
-  addons?: Record<string, string>;
+  addons?: Record<string, string>; // addonId -> stripePriceId
 
-  // Define cómo calcular cantidad para el precio base:
-  // - ITEM_QTY: usa item.quantity (ej: “cajas”)
-  // - PEOPLE: usa selection.people (ej: “por persona”)
+  // NUEVO: montos para Wompi (en centavos COP)
+  wompiPricing?:
+    | { kind: "AMOUNT"; amountInCents: number }
+    | { kind: "VARIANTS"; variants: Record<string, number> }; // variantId -> amountInCents
+
+  wompiAddons?: Record<string, number>; // addonId -> amountInCents
+
   quantitySource: "ITEM_QTY" | "PEOPLE";
-
   minLeadTimeHours?: number;
-
-  // Required fields mínimos para server validation
   required?: Array<"DATE" | "ADDRESS" | "PEOPLE" | "VARIANT">;
 };
 
 export const catalog: CatalogOffering[] = [
-  // EJEMPLOS — ajusta con tus priceIds reales
+  // EJEMPLOS — ajustar con priceIds reales
   {
     id: "lunchbox",
     title: "Lunch Box (Reuniones Ejecutivas)",
