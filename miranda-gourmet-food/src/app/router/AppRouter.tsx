@@ -7,6 +7,7 @@ import PayWompiPage from "../../features/payments/pages/PayWompiPage";
 import WompiResultPage from "../../features/payments/pages/WompiResultPage";
 
 import HomePage from "../../features/catalog/pages/home/HomePage";
+import CorporativosPage from "../../features/catalog/pages/corporativos/CorporativosPage";
 import OrderDetailsPage from "../../features/orders/pages/OrderDetailPage";
 
 
@@ -28,7 +29,7 @@ export default function AppRouter() {
     <Routes>
       <Route element={<AppShell />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/corporativos" element={<ComingSoon title="Corporativos" />} />
+        <Route path="/corporativos" element={<CorporativosPage />} />
         <Route path="/familiares" element={<ComingSoon title="Eventos familiares" />} />
         <Route path="/quote" element={<ComingSoon title="Cotizar" />} />
         <Route path="/cart" element={<CartPage />} />
