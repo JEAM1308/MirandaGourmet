@@ -1,21 +1,20 @@
-import type {
-  CreateCheckoutSessionRequest,
-  CreateCheckoutSessionResponse,
-} from "../types/checkout.types";
+export type CheckoutItemInput = {
+  offeringId: string;
+  quantity: number;
+  selection: unknown;
+};
 
-export async function createCheckoutSession(
-  payload: CreateCheckoutSessionRequest
-): Promise<CreateCheckoutSessionResponse> {
-  const res = await fetch("/api/checkout/create-session", {
+export async function createCheckoutSession(input: { items: CheckoutItemInput[] }) {
+  const res = await fetch("/api/checkout/create-sessions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(input),
   });
 
   if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Checkout failed (${res.status}): ${text}`);
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err?.error ?? "Failed to create checkout session");
   }
 
-  return (await res.json()) as CreateCheckoutSessionResponse;
+  return (await res.json()) as { url: string };
 }

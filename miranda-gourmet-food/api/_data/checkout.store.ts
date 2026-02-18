@@ -1,20 +1,27 @@
-import type { OrderItemSnapshot } from "../../src/shared/types/order.types";
 
-export type CheckoutSnapshot = {
+export type CheckoutItemSnapshot = {
+  offeringId: string;
+  title: string;
+  quantity: number;
+  unitPriceCents: number;
+  selection: unknown; // ✅ backend-safe
+};
+export type CheckoutRecord = {
   reference: string;
   provider: "wompi" | "stripe";
-  items: OrderItemSnapshot[];
+  items: CheckoutItemSnapshot[];
   totalAmountCents: number;
   createdAtISO: string;
 };
 
-const sessions: Record<string, CheckoutSnapshot> = {};
 
-export function saveCheckout(snapshot: CheckoutSnapshot) {
+const sessions: Record<string, CheckoutRecord> = {};
+
+export function saveCheckout(snapshot: CheckoutRecord) {
   sessions[snapshot.reference] = snapshot;
 }
 
-export function getCheckout(reference: string): CheckoutSnapshot | null {
+export function getCheckout(reference: string): CheckoutRecord | null {
   return sessions[reference] ?? null;
 }
 
