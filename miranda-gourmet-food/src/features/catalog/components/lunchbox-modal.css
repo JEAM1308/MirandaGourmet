@@ -1,0 +1,211 @@
+/* =========================
+   Lunch Box Modal (global)
+========================= */
+
+.lb-modal {
+  background: rgba(12, 14, 18, 0.92);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
+  color: rgba(255,255,255,0.92);
+}
+
+.lb-modalHeader,
+.lb-modalFooter {
+  border-color: rgba(255,255,255,0.10) !important;
+  background: transparent;
+}
+
+.lb-modalTitle {
+  font-weight: 750;
+  letter-spacing: 0.01em;
+}
+
+.lb-modalSub {
+  color: rgba(255,255,255,0.65);
+  font-weight: 500;
+}
+
+.lb-modalBody {
+  padding: 1rem 1rem 1.1rem;
+}
+
+.lb-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.lb-heroImg {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.02);
+  filter: saturate(1.05) contrast(1.05);
+}
+
+.lb-heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.20) 0%,
+    rgba(0,0,0,0.40) 55%,
+    rgba(0,0,0,0.70) 100%
+  );
+  pointer-events: none;
+}
+
+.lb-heroMeta {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.lb-kicker {
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.70);
+  font-weight: 650;
+}
+
+.lb-people {
+  color: rgba(255,255,255,0.86);
+}
+
+.lb-sectionTitle {
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 10px;
+}
+
+.lb-label {
+  color: rgba(255,255,255,0.80);
+  font-weight: 520;
+  margin-bottom: 6px;
+}
+
+.lb-field .form-control,
+.lb-restrRow .form-control,
+.lb-field .form-select {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.92);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.lb-field .form-control::placeholder,
+.lb-restrRow .form-control::placeholder {
+  color: rgba(255,255,255,0.45);
+}
+
+.lb-field .form-control:focus,
+.lb-restrRow .form-control:focus,
+.lb-field .form-select:focus {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(198,168,91,0.55);
+  box-shadow: 0 0 0 0.2rem rgba(198,168,91,0.15);
+  color: rgba(255,255,255,0.92);
+}
+
+.lb-addBtn {
+  border-color: rgba(255,255,255,0.18) !important;
+}
+
+.lb-restrictions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lb-restrRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.lb-trashBtn {
+  border-radius: 12px !important;
+}
+
+.lb-summaryCard {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 16px;
+  padding: 14px;
+  backdrop-filter: blur(10px);
+}
+
+.lb-summaryRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.lb-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.10);
+  margin: 10px 0;
+}
+
+.lb-summaryTotal {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-weight: 750;
+}
+
+.lb-total {
+  font-size: 1.25rem;
+  letter-spacing: 0.01em;
+}
+
+.lb-hint {
+  margin-top: 8px;
+  color: rgba(255,255,255,0.60);
+  font-size: 0.9rem;
+}
+
+.lb-chips {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lb-chip {
+  background: rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.82) !important;
+}
+
+@media (max-width: 576px) {
+  .lb-heroImg {
+    height: 185px;
+  }
+
+  .lb-restrRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lb-restrRow .form-control {
+    width: 100%;
+    max-width: none !important;
+  }
+}

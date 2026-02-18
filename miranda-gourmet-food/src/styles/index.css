@@ -9,3 +9,5 @@
 @import "../features/catalog/pages/home/home.css";
 @import "../features/catalog/pages/corporativos/corporativos.css";
 @import "../features/catalog/pages/quote/quote.css";
+/* modals */
+@import "../features/catalog/components/lunchbox-modal.css"

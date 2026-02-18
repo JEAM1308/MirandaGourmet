@@ -11,6 +11,34 @@ import { offeringsMock } from "../../catalog/data/offerings.mock";
 
 import { startCheckout } from "../../payments/services/payments.services";
 import { env } from "../../../app/config/env";
+/*
+  Helper para lunch box
+*/
+type LunchBoxSelection = {
+  people: {
+    regular: number;
+    vegetarian: number;
+    restricted: { label: string; qty: number }[];
+  };
+  notes?: string;
+};
+
+function isLunchBoxSelection(sel: unknown): sel is LunchBoxSelection {
+  if (!sel || typeof sel !== "object") return false;
+
+  const maybe = sel as LunchBoxSelection;
+
+  return (
+    typeof maybe.people?.regular === "number" &&
+    typeof maybe.people?.vegetarian === "number" &&
+    Array.isArray(maybe.people?.restricted)
+  );
+}
+
+function totalLunchBoxPeople(sel: LunchBoxSelection) {
+  const restricted = sel.people.restricted.reduce((s, r) => s + r.qty, 0);
+  return sel.people.regular + sel.people.vegetarian + restricted;
+}
 
 function formatCOPFromCents(amountCents: number) {
   const amount = amountCents / 100;
@@ -139,43 +167,88 @@ export default function CartPage() {
                             </div>
 
                             <div className="small mt-2">
-                              {item.selection.variantId && (
-                                <div>
-                                  <span className="text-muted">Variante:</span>{" "}
-                                  <span className="fw-semibold">
-                                    {item.selection.variantId}
-                                  </span>
-                                </div>
-                              )}
+                              {isLunchBoxSelection(item.selection) ? (
+                                <>
+                                  <div>
+                                    <span className="text-muted">Total personas:</span>{" "}
+                                    <span className="fw-semibold">
+                                      {totalLunchBoxPeople(item.selection)}
+                                    </span>
+                                  </div>
 
-                              {typeof item.selection.people === "number" && (
-                                <div>
-                                  <span className="text-muted">Personas:</span>{" "}
-                                  <span className="fw-semibold">
-                                    {item.selection.people}
-                                  </span>
-                                </div>
-                              )}
+                                  <div>
+                                    <span className="text-muted">Normales:</span>{" "}
+                                    <span className="fw-semibold">
+                                      {item.selection.people.regular}
+                                    </span>
+                                  </div>
 
-                              {item.selection.dateISO && (
-                                <div>
-                                  <span className="text-muted">Fecha:</span>{" "}
-                                  <span className="fw-semibold">
-                                    {item.selection.dateISO}
-                                  </span>
-                                </div>
-                              )}
+                                  <div>
+                                    <span className="text-muted">Vegetarianos:</span>{" "}
+                                    <span className="fw-semibold">
+                                      {item.selection.people.vegetarian}
+                                    </span>
+                                  </div>
 
-                              {item.selection.address && (
-                                <div
-                                  className="text-truncate"
-                                  style={{ maxWidth: 420 }}
-                                >
-                                  <span className="text-muted">Dirección:</span>{" "}
-                                  <span className="fw-semibold">
-                                    {item.selection.address}
-                                  </span>
-                                </div>
+                                  {item.selection.people.restricted.length > 0 && (
+                                    <div className="mt-1">
+                                      <span className="text-muted">Restricciones:</span>
+                                      <ul className="mb-0 ps-3">
+                                        {item.selection.people.restricted.map((r, idx) => (
+                                          <li key={`${r.label}-${idx}`}>
+                                            {r.label} ({r.qty})
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+
+                                  {item.selection.notes && (
+                                    <div className="mt-1">
+                                      <span className="text-muted">Notas:</span>{" "}
+                                      <span className="fw-semibold">{item.selection.notes}</span>
+                                    </div>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  {/* fallback para otros servicios */}
+                                  {item.selection.variantId && (
+                                    <div>
+                                      <span className="text-muted">Variante:</span>{" "}
+                                      <span className="fw-semibold">
+                                        {item.selection.variantId}
+                                      </span>
+                                    </div>
+                                  )}
+
+                                  {typeof item.selection.people === "number" && (
+                                    <div>
+                                      <span className="text-muted">Personas:</span>{" "}
+                                      <span className="fw-semibold">
+                                        {item.selection.people}
+                                      </span>
+                                    </div>
+                                  )}
+
+                                  {item.selection.dateISO && (
+                                    <div>
+                                      <span className="text-muted">Fecha:</span>{" "}
+                                      <span className="fw-semibold">
+                                        {item.selection.dateISO}
+                                      </span>
+                                    </div>
+                                  )}
+
+                                  {item.selection.address && (
+                                    <div>
+                                      <span className="text-muted">Dirección:</span>{" "}
+                                      <span className="fw-semibold">
+                                        {item.selection.address}
+                                      </span>
+                                    </div>
+                                  )}
+                                </>
                               )}
                             </div>
                           </div>

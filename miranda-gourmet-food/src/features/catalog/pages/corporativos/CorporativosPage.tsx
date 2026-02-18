@@ -2,7 +2,9 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
 import { BsArrowRight, BsCheck2Circle, BsClock, BsPeople, BsStars } from "react-icons/bs";
+import LunchBoxOrderModal from "../../components/LunchBoxOrderModal";
 import "./corporativos.css";
+import { lunchBoxOffering } from "../../data/offerings.corporativos";
 
 type Highlight = {
   icon: React.ReactNode;
@@ -268,6 +270,7 @@ function scrollToSection(id: string) {
 
 export default function CorporativosPage() {
   const [openId, setOpenId] = useState<ServiceId | null>(null);
+  const [openLunchBox, setOpenLunchBox] = useState(false);
   const selected = useMemo(() => services.find((s) => s.id === openId) ?? null, [openId]);
   const isOpen = openId !== null;
   return (
@@ -427,9 +430,15 @@ export default function CorporativosPage() {
                     <Button variant="outline-light" onClick={() => setOpenId(s.id)} className="col-6 fs-6">
                       Ver detalle 
                     </Button>
-                    <Link to={`/quote?service=${s.id}`} className="btn btn-outline-warning col-6 fs-6 d-flex align-items-center justify-content-center">
+                    <Button variant="outline-warning" className="col-6 fs-6 d-flex align-items-center justify-content-center"
+                    onClick={() => setOpenLunchBox(true)}>
                       Pedir&nbsp;<BsArrowRight/>
-                    </Link>
+                    </Button>
+                    <LunchBoxOrderModal 
+                    show={openLunchBox}
+                    onHide={() => setOpenLunchBox(false)}
+                    offering={lunchBoxOffering}
+                    />
                   </Card.Footer>
                 </Card>
 
