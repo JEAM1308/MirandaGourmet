@@ -1,6 +1,7 @@
-import { Badge, Card, Col, Container, Row } from "react-bootstrap";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { BsCheck2Circle, BsClock, BsPeople, BsStars } from "react-icons/bs";
+import { Badge, Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
+import { BsArrowRight, BsCheck2Circle, BsClock, BsPeople, BsStars } from "react-icons/bs";
 import "./corporativos.css";
 
 type Highlight = {
@@ -26,43 +27,122 @@ const highlights: Highlight[] = [
     desc: "Desde reuniones pequeñas hasta eventos corporativos masivos.",
   },
 ];
+type ServiceId = "lunch-box" | "eventos-masivos" | "eventos-gala" | "entrega-empresarial";
 
-type PackageCard = {
+type Service = {
+  id: ServiceId;
   title: string;
   subtitle: string;
   bullets: string[];
+  image: { src: string; alt: string };
   badge?: string;
+  // Contenido del modal
+  intro: string;
+  includes: string[];
+  idealFor: string[];
+  options: string[];
+  notes?: string[];
+
 };
 
-const packages: PackageCard[] = [
+const services: Service[] = [
   {
-    title: "Coffee Break Ejecutivo",
-    subtitle: "Ideal para reuniones, talleres y juntas",
+    id: "lunch-box",
+    title: "Lunch Box",
+    subtitle: "Almuerzos individuales para equipos",
     bullets: [
-      "Bebidas calientes/frías",
-      "Opciones dulces y saladas",
-      "Montaje corporativo",
+      "Porciones balanceadas y presentación exclusiva",
+      "Opciones vegetarianas y restricciones alimentarias",
+      "Entrega programada",
     ],
     badge: "Más pedido",
+    image: {
+      src: "/assets/services/corporativos/lunch-box.png",
+      alt: "Lunch Box corporativo",
+    },
+    intro: "Una solución limpia y premium para equipos: porciones individuales, presentación impecable y logística fácil.",
+    includes: [
+      "Menú individual (proteína + acompañamientos)",
+      "Cubiertos/servilletas (opcional)",
+      "Etiquetado por tipo de dieta (si aplica)",
+      "Entrega por franjas horarias",
+    ],
+    idealFor: ["Reuniones internas", "Capacitaciones", "Días de oficina con alta carga"],
+    options: ["Vegetariano / vegano", "Sin gluten (según disponibilidad)", "Bebidas", "Postre"],
+    notes: ["Los tiempos de entrega dependen de zona y cantidad."],
   },
   {
-    title: "Lunch ",
-    subtitle: "Almuerzo completo para equipos",
+    id: "eventos-masivos",
+    title: "Eventos Masivos",
+    subtitle: "Grandes volúmenes con control y logística",
     bullets: [
-      "Menú balanceado",
-      "Opciones vegetarianas",
-      "Entrega y montaje",
+      "Planeación por cantidades, estaciones y tiempos",
+      "Montaje eficiente para alto flujo",
+      "Equipo de apoyo y coordinación en sitio",
     ],
+    image: {
+      src: "/assets/services/corporativos/eventos.png",
+      alt: "Catering para eventos masivos",
+    },
+    intro:
+      "Diseñado para alto flujo: planificación por estaciones, control operativo y coordinación en sitio para que todo fluya.",
+    includes: [
+      "Planeación por cantidades y horarios",
+      "Montaje por estaciones/zonas",
+      "Coordinación logística y operación",
+      "Opciones de personal en sitio (según plan)",
+    ],
+    idealFor: ["Convenciones", "Eventos internos grandes", "Activaciones y ferias"],
+    options: ["Estaciones temáticas", "Servicio en sitio", "Bebidas", "Señalización básica"],
   },
   {
-    title: "Evento de Gala",
-    subtitle: "Recepciones, lanzamientos y celebraciones",
+    id: "eventos-gala",
+    title: "Eventos de Gala",
+    subtitle: "Recepciones ejecutivas y experiencias premium",
     bullets: [
-      "Canapés + bebidas",
-      "Personal de apoyo",
-      "Experiencia premium",
+      "Canapés, bebidas y presentación sobria",
+      "Personal de apoyo (opcional)",
+      "Montaje elegante para clientes y directivos",
     ],
-    badge: "Premium",
+    image: {
+      src: "/assets/services/corporativos/gala.png",
+      alt: "Catering para eventos de gala",
+    },
+    intro:
+      "Una experiencia de alto nivel para clientes y directivos: servicio sobrio, presentación premium y ejecución impecable.",
+    includes: [
+      "Selección de canapés y pasabocas",
+      "Montaje elegante (según espacio)",
+      "Cristalería básica (opcional)",
+      "Personal de apoyo (opcional)",
+    ],
+    idealFor: ["Lanzamientos", "Cócteles corporativos", "Recepciones ejecutivas"],
+    options: ["Maridaje de bebidas", "Mesa de postres", "Branding discreto en montaje"],
+    notes: ["Se recomienda agendar con antelación para asegurar disponibilidad."],
+  },
+  {
+    id: "entrega-empresarial",
+    title: "Entrega Empresarial",
+    subtitle: "Catering recurrente para oficina",
+    bullets: [
+      "Planes semanales o mensuales",
+      "Entrega a áreas / pisos / salas",
+      "Factura y coordinación administrativa",
+    ],
+    image: {
+      src: "/assets/services/corporativos/entrega.png",
+      alt: "Entrega empresarial de catering",
+    },
+    intro:
+      "Ideal si necesitas catering frecuente: planes semanales/mensuales, coordinación administrativa y entrega organizada.",
+    includes: [
+      "Plan semanal o mensual",
+      "Entrega por áreas/salas/pisos",
+      "Coordinación con administración",
+      "Opciones de menú rotativo",
+    ],
+    idealFor: ["Oficinas", "Equipos híbridos", "Reuniones recurrentes"],
+    options: ["Menú rotativo", "Control por listas", "Factura/soporte administrativo"],
   },
 ];
 
@@ -70,21 +150,127 @@ type Testimonial = {
   company: string;
   quote: string;
 };
-
 const testimonials: Testimonial[] = [
   {
-    company: "Cliente corporativo (demo)",
+    company: "ACAIRE",
     quote:
-      "Excelente logística y presentación. Puntuales, claros y muy profesionales.",
+      "Confiables y profesionales.",
   },
   {
-    company: "Equipo de Talento Humano (demo)",
+    company: "CEACON",
     quote:
-      "La experiencia fue impecable. Muy buena atención al detalle y opciones para todos.",
+      "Simplemente delicioso. Siempre cumplen.",
+  },
+  {
+    company: "Yemail Arquitectura",
+    quote:
+      "Nos salvaron la vida en un evento urgente.",
+  },
+  {
+    company: "IFX Networks Colombia",
+    quote:
+      "Excelente empresa. Confiable, puntual, y con muy buen servicio.",
   },
 ];
 
+
+function ServiceModal({
+  show,
+  onHide,
+  service,
+}: {
+  show: boolean;
+  onHide: () => void;
+  service: Service | null;
+}) {
+  if (!service) return null;
+
+  return (
+    <Modal show={show} onHide={onHide} centered size="lg" contentClassName="corp-modal">
+      <Modal.Header closeButton closeVariant="white" className="corp-modalHeader">
+        <Modal.Title className="corp-modalTitle">
+          {service.title} <span className="corp-modalSub">— {service.subtitle}</span>
+        </Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body className="corp-modalBody">
+        <div className="corp-modalTop">
+          <img className="corp-modalImg" src={service.image.src} alt={service.image.alt} />
+          <div className="corp-modalImgOverlay" />
+          {service.badge && (
+            <Badge pill className="corp-badge corp-modalBadge">
+              {service.badge}
+            </Badge>
+          )}
+        </div>
+
+        <p className="corp-modalIntro">{service.intro}</p>
+
+        <Row className="g-3">
+          <Col md={6}>
+            <div className="corp-modalSectionTitle">Incluye</div>
+            <ul className="corp-checkList">
+              {service.includes.map((x) => (
+                <li key={x}>
+                  <BsCheck2Circle /> {x}
+                </li>
+              ))}
+            </ul>
+          </Col>
+
+          <Col md={6}>
+            <div className="corp-modalSectionTitle">Ideal para</div>
+            <ul className="corp-modalList">
+              {service.idealFor.map((x) => (
+                <li key={x}>{x}</li>
+              ))}
+            </ul>
+
+            <div className="corp-modalSectionTitle mt-3">Opciones</div>
+            <ul className="corp-modalList">
+              {service.options.map((x) => (
+                <li key={x}>{x}</li>
+              ))}
+            </ul>
+          </Col>
+        </Row>
+
+        {service.notes?.length ? (
+          <div className="corp-modalNotes">
+            {service.notes.map((n) => (
+              <div key={n} className="corp-modalNote">
+                * {n}
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </Modal.Body>
+
+      <Modal.Footer className="corp-modalFooter">
+        <Button variant="outline-light" onClick={onHide}>
+          Cerrar
+        </Button>
+
+        <Link to="/quote" className="btn btn-outline-warning">
+          Quiero este servicio <BsArrowRight className="ms-1" />
+        </Link>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+function scrollToSection(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const y = el.getBoundingClientRect().top + window.scrollY;
+
+  window.scrollTo({ top: y, behavior: "smooth" });
+}
+
 export default function CorporativosPage() {
+  const [openId, setOpenId] = useState<ServiceId | null>(null);
+  const selected = useMemo(() => services.find((s) => s.id === openId) ?? null, [openId]);
+  const isOpen = openId !== null;
   return (
     <>
       {/* HERO */}
@@ -110,14 +296,13 @@ export default function CorporativosPage() {
 
                 <p className="fs-5 mb-3 corp-lead">
                   Diseñado para empresas: puntualidad, montaje sobrio, y una
-                  experiencia gastronómica que se siente de alto nivel — sin
-                  complicarte.
+                  experiencia gastronómica de alto nivel.
                 </p>
 
                 <div className="d-flex flex-column flex-sm-row gap-2">
-                  <Link to="/quote" className="btn btn-outline-warning btn-lg">
-                    Cotizar evento
-                  </Link>
+                  <button className="btn btn-outline-warning btn-lg" onClick={() => scrollToSection("paquetes-corporativos")}>
+                    Mira nuestra oferta
+                  </button>
                   <Link to="/cart" className="btn btn-outline-light btn-lg">
                     Ver carrito
                   </Link>
@@ -193,8 +378,13 @@ export default function CorporativosPage() {
       </section>
 
       {/* PACKAGES */}
-      <section className="corp-section">
-        <Container>
+      <section 
+      id="paquetes-corporativos"
+      className="corp-section"
+      style={{ backgroundImage: 'url("/assets/bg/corp-packages.png")' }}
+      >
+
+        <Container className="corp-glass">
           <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
             <div>
               <h2 className="h4 mb-1">Paquetes corporativos</h2>
@@ -209,49 +399,54 @@ export default function CorporativosPage() {
           </div>
 
           <Row className="g-3">
-            {packages.map((p) => (
-              <Col lg={4} key={p.title}>
-                <Card className="h-100 border-0 shadow-sm corp-packageCard">
-                  <Card.Body className="p-4">
-                    <div className="d-flex justify-content-between align-items-start gap-2">
-                      <div>
-                        <div className="h5 mb-1">{p.title}</div>
-                        <div className="text-muted small">
-                          {p.subtitle}
-                        </div>
+            {services.map((s) => (
+              <Col sm={6} md={4} lg={3} key={s.id}>
+                <Card className="h-100 border-0 shadow corp-packageCard">
+                  <div className="corp-packageMedia">
+                    <Card.Img
+                      variant="top"
+                      src={s.image.src}
+                      alt={s.image.alt}
+                      className="corp-packageImg"
+                    />
+                    <div className="corp-packageMediaOverlay" />
+                    {s.badge && (
+                      <div className="d-flex m-2 align-items-center justify-content-end">
+                      <Badge className="corp-badge corp-packageBadge" pill>
+                        {s.badge}
+                      </Badge>
                       </div>
+                    )}
+                  </div>
 
-                      {p.badge && (
-                        <Badge className="corp-badge" pill>
-                          {p.badge}
-                        </Badge>
-                      )}
-                    </div>
+                  <Card.Body className="p-4">
+                    <div className="h5 mb-1">{s.title}</div>
+                    <div className="text-muted small">{s.subtitle}</div>
 
                     <ul className="mt-3 mb-0 corp-bullets">
-                      {p.bullets.map((b) => (
+                      {s.bullets.map((b) => (
                         <li key={b}>{b}</li>
                       ))}
                     </ul>
                   </Card.Body>
 
                   <Card.Footer className="border-0 bg-transparent px-4 pb-4 pt-0">
-                    <Link
-                      to="/quote"
-                      className="btn btn-outline-light w-100"
-                    >
-                      Solicitar este paquete
-                    </Link>
+                    <Button variant="outline-light" onClick={() => setOpenId(s.id)}>
+                      Ver detalle
+                    </Button>
                   </Card.Footer>
                 </Card>
+
               </Col>
             ))}
           </Row>
         </Container>
       </section>
-
+      <ServiceModal show={isOpen} onHide={() => setOpenId(null)} service={selected}/>
       {/* HOW IT WORKS */}
-      <section className="corp-section">
+      <section className="corp-section"
+      style={{ backgroundImage: 'url("/assets/bg/how-it-works.png")' }}
+      >
         <Container>
           <Row className="g-3">
             <Col lg={6}>
@@ -303,7 +498,7 @@ export default function CorporativosPage() {
                   <div className="mt-3">
                     <Link
                       to="/quote"
-                      className="btn btn-outline-warning w-100"
+                      className="btn btn-outline-light w-100"
                     >
                       Cotizar ahora
                     </Link>
@@ -318,16 +513,18 @@ export default function CorporativosPage() {
       {/* TESTIMONIALS */}
       <section className="corp-sectionTight">
         <Container>
-          <h2 className="h4 mb-3">Clientes</h2>
+          <h2 className="h4 mb-3 corp-glass text-center">Nuestros clientes</h2>
 
           <Row className="g-3">
             {testimonials.map((t) => (
               <Col lg={6} key={t.company}>
                 <Card className="border-0 shadow-sm corp-glassPanel">
-                  <Card.Body className="p-4">
-                    <div className="text-muted small mb-2">
+                  <Card.Header>
+                    <div className="text-center ">
                       {t.company}
                     </div>
+                  </Card.Header>
+                  <Card.Body className="p-4 text-center">
                     <div className="corp-quote">
                       &ldquo;{t.quote}&rdquo;
                     </div>

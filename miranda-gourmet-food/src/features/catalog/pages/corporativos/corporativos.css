@@ -17,7 +17,7 @@
   inset: 0;
   background:
     radial-gradient(900px 500px at 15% 10%, rgba(198,168,91,0.10), transparent 60%),
-    linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.80));
+    linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.0));
 }
 
 .corp-content {
@@ -26,7 +26,7 @@
 }
 
 .corp-glass {
-  background: rgba(0,0,0,0.55);
+  background: rgba(0,0,0,0.7);
   border: 1px solid rgba(255,255,255,0.10);
   border-radius: 20px;
   backdrop-filter: blur(8px);
@@ -105,10 +105,14 @@
 /* sections */
 .corp-section {
   padding: 56px 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .corp-sectionTight {
   padding: 36px 0;
+  background-image: url("/assets/bg/testimonials.png");
 }
 
 /* IMPORTANT: forzar look premium (evita blanco Bootstrap) */
@@ -133,7 +137,7 @@
 .corp-glassPanel {
   background: rgba(255,255,255,0.05) !important;
   border: 1px solid rgba(255,255,255,0.10) !important;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(100px);
   border-radius: 18px;
   color: rgba(255,255,255,0.92);
 }
@@ -183,4 +187,115 @@
   .corp-glass { padding: 2rem; }
   .corp-lead { font-size: 1.125rem; }
   .corp-sideCard { padding: 1.25rem; }
+}
+/* =========================
+   Modal (service detail)
+========================= */
+
+.corp-modal {
+  background: rgba(12, 14, 18, 0.92);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
+  color: rgba(255,255,255,0.92);
+}
+
+.corp-modalHeader {
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  background: transparent;
+}
+
+.corp-modalTitle {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.corp-modalSub {
+  color: rgba(255,255,255,0.65);
+  font-weight: 500;
+}
+
+.corp-modalBody {
+  padding: 1rem 1rem 1.1rem;
+}
+
+.corp-modalTop {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+  margin-bottom: 14px;
+}
+
+.corp-modalImg {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.02);
+}
+
+.corp-modalImgOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.15) 0%,
+    rgba(0,0,0,0.35) 55%,
+    rgba(0,0,0,0.60) 100%
+  );
+  pointer-events: none;
+}
+
+.corp-modalBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.corp-modalIntro {
+  color: rgba(255,255,255,0.78);
+  margin: 8px 0 16px;
+  line-height: 1.5;
+}
+
+.corp-modalSectionTitle {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 10px;
+}
+
+.corp-modalList {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.78);
+}
+
+.corp-modalList li {
+  margin-bottom: 8px;
+}
+
+.corp-modalNotes {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.10);
+}
+
+.corp-modalNote {
+  color: rgba(255,255,255,0.62);
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.corp-modalFooter {
+  border-top: 1px solid rgba(255,255,255,0.10);
+  background: transparent;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .corp-modalImg { height: 190px; }
 }

@@ -5,9 +5,9 @@ import { BsWhatsapp, BsEnvelope, BsGeo } from "react-icons/bs";
 export default function AppFooter() {
   const year = new Date().getFullYear();
 
-  const waText = encodeURIComponent(
-    "Hola Miranda Gourmet, quiero más información sobre sus servicios."
-  );
+  const waText = encodeURIComponent( "Hola Miranda Gourmet, quiero más información sobre sus servicios.");
+  const emailSubject = encodeURIComponent("Hola Miranda Gourmet");
+  const emailBody = encodeURIComponent("Hola, me gustaría conocer más sobre sus servicios.");
 
   return (
     <footer className="foot-root">
@@ -58,8 +58,9 @@ export default function AppFooter() {
               </li>
 
               <li>
-                <a className="foot-link" href="mailto:contacto@mirandagourmet.com">
-                  <BsEnvelope /> contacto@mirandagourmet.com
+                
+                <a className="foot-link" href={`mailto:mailto:comercial@mirandagourmetfood.com?subject=${emailSubject}&body=${emailBody}`}>
+                  <BsEnvelope /> comercial@mirandagourmetfood.com
                 </a>
               </li>
 
@@ -73,7 +74,7 @@ export default function AppFooter() {
         <div className="foot-bottomBar">
           <div className="foot-meta">© {year} — Miranda Gourmet Food</div>
           <div className="foot-meta">
-            Developed by <span className="foot-dev metal-gold">JEAM Dev</span>
+            <a href="https://www.jeamdev.com">Web desarrollada por <span className="foot-dev metal-gold">J.E.A.M Dev</span></a> 
           </div>
         </div>
       </Container>

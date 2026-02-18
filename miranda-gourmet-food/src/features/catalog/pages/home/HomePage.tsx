@@ -32,10 +32,10 @@ function TrustPoint({ icon, text }: { icon: ReactNode; text: string }) {
 
 export default function HomePage() {
   return (
-    <section id="home" className="home-page">
+    <section id="home" className="home-page d-flex align-items-center">
       <div className="home-overlay" />
 
-      <Container className="home-content d-flex">
+      <Container className="home-content">
         <header className="home-header home-glass">
           <Row className="g-4">
             <Col lg={7}>
@@ -45,7 +45,7 @@ export default function HomePage() {
 
               <h1 className="display-5 fw-semibold mb-2">
                 Experiencias gastronómicas{" "}
-                <span className="home-underline">memorables</span>, sin complicaciones.
+                <span className="home-underline">memorables</span>
               </h1>
 
               <p className="fs-5 home-lead">
