@@ -4,6 +4,8 @@
 @import "../app/layout/navbar/app-navbar.css";
 @import "../app/layout/shell/app-shell.css";
 @import "../app/layout/footer/app-footer.css";
+/* cart*/
+@import "../features/cart/pages/cart.css";
 
 /* pages */
 @import "../features/catalog/pages/home/home.css";

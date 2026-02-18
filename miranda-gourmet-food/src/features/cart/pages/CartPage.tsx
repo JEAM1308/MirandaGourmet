@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Alert, Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import { useCart } from "../hooks/useCart";
@@ -11,6 +11,9 @@ import { offeringsMock } from "../../catalog/data/offerings.mock";
 
 import { startCheckout } from "../../payments/services/payments.services";
 import { env } from "../../../app/config/env";
+
+import "./cart.css";
+
 /*
   Helper para lunch box
 */
@@ -71,7 +74,6 @@ export default function CartPage() {
     if (!validation.ok || state.items.length === 0) return;
 
     setIsCheckingOut(true);
-
     try {
       const { url } = await startCheckout(state.items);
       window.location.href = url;
@@ -83,18 +85,19 @@ export default function CartPage() {
     }
   };
 
-  const providerLabel =
-    env.paymentProvider === "wompi" ? "Pagar con Wompi" : "Pagar con Stripe";
+  const providerLabel = env.paymentProvider === "wompi" ? "Pagar con Wompi" : "Pagar con Stripe";
 
   return (
-    <section className="pageSection">
-      <Container className="py-4">
-        <Row className="align-items-center mb-3">
-          <Col>
-            <h1 className="h3 mb-0">Carrito</h1>
-            <div className="text-muted">Revisa tu selección antes de pagar.</div>
-          </Col>
-          <Col className="text-end">
+    <section className="cart-page">
+      <Container>
+        {/* Header */}
+        <div className="cart-header">
+          <div>
+            <h1 className="cart-title h3">Carrito</h1>
+            <div className="cart-subtitle">Revisa tu selección antes de pagar.</div>
+          </div>
+
+          <div>
             <Button
               variant="outline-secondary"
               onClick={onClear}
@@ -102,24 +105,26 @@ export default function CartPage() {
             >
               Vaciar carrito
             </Button>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
+        {/* Empty */}
         {state.items.length === 0 ? (
-          <Card className="p-4">
-            <div className="text-center">
-              <div className="h5 mb-2">Tu carrito está vacío</div>
-              <div className="text-muted mb-3">
+          <div className="cart-panel">
+            <div className="cart-panel-body cart-empty">
+              <h2>Tu carrito está vacío</h2>
+              <div className="mb-3" style={{ color: "rgba(255,255,255,0.65)" }}>
                 Cuando agregues un servicio, aparecerá aquí.
               </div>
 
-              <Link to="/" className="btn btn-primary">
+              <Link to="/" className="btn btn-outline-warning btn-lg">
                 Ver catálogo
               </Link>
             </div>
-          </Card>
+          </div>
         ) : (
           <Row className="g-3">
+            {/* Items */}
             <Col lg={8}>
               {!validation.ok && (
                 <Alert variant="warning">
@@ -133,142 +138,110 @@ export default function CartPage() {
               )}
 
               {state.items.map((item) => (
-                <Card className="mb-3" key={item.id}>
-                  <Card.Body>
-                    <Row className="align-items-start g-3">
-                      <Col xs={12} md={7}>
-                        <div className="d-flex gap-3">
-                          {item.image?.src ? (
-                            <img
-                              src={item.image.src}
-                              alt={item.image.alt ?? item.title}
-                              style={{
-                                width: 72,
-                                height: 72,
-                                objectFit: "cover",
-                                borderRadius: 12,
-                              }}
-                            />
-                          ) : (
-                            <div
-                              style={{
-                                width: 72,
-                                height: 72,
-                                borderRadius: 12,
-                                background: "#eee",
-                              }}
-                            />
-                          )}
+                <div className="cart-item" key={item.id}>
+                  <div className="cart-item-body">
+                    <div className="cart-item-row">
+                      {/* Left */}
+                      <div className="cart-item-left">
+                        {item.image?.src ? (
+                          <img
+                            src={item.image.src}
+                            alt={item.image.alt ?? item.title}
+                            className="cart-thumb"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="cart-thumb" />
+                        )}
 
-                          <div>
-                            <div className="fw-semibold">{item.title}</div>
-                            <div className="text-muted small">
-                              {item.unitLabel ? `Unidad: ${item.unitLabel}` : "Servicio"}
-                            </div>
+                        <div>
+                          <div className="cart-item-title">{item.title}</div>
+                          <div className="cart-item-meta">
+                            {item.unitLabel ? `Unidad: ${item.unitLabel}` : "Servicio"}
+                          </div>
 
-                            <div className="small mt-2">
-                              {isLunchBoxSelection(item.selection) ? (
-                                <>
-                                  <div>
-                                    <span className="text-muted">Total personas:</span>{" "}
-                                    <span className="fw-semibold">
-                                      {totalLunchBoxPeople(item.selection)}
-                                    </span>
+                          <div className="cart-item-details">
+                            {isLunchBoxSelection(item.selection) ? (
+                              <>
+                                <div>
+                                  <span className="muted">Total personas:</span>{" "}
+                                  <strong>{totalLunchBoxPeople(item.selection)}</strong>
+                                </div>
+
+                                <div>
+                                  <span className="muted">Normales:</span>{" "}
+                                  <strong>{item.selection.people.regular}</strong>
+                                </div>
+
+                                <div>
+                                  <span className="muted">Vegetarianos:</span>{" "}
+                                  <strong>{item.selection.people.vegetarian}</strong>
+                                </div>
+
+                                {item.selection.people.restricted.length > 0 && (
+                                  <div className="mt-1">
+                                    <span className="muted">Restricciones:</span>
+                                    <ul className="mb-0 ps-3">
+                                      {item.selection.people.restricted.map((r, idx) => (
+                                        <li key={`${r.label}-${idx}`}>
+                                          {r.label} ({r.qty})
+                                        </li>
+                                      ))}
+                                    </ul>
                                   </div>
+                                )}
 
-                                  <div>
-                                    <span className="text-muted">Normales:</span>{" "}
-                                    <span className="fw-semibold">
-                                      {item.selection.people.regular}
-                                    </span>
+                                {item.selection.notes && (
+                                  <div className="mt-1">
+                                    <span className="muted">Notas:</span>{" "}
+                                    <strong>{item.selection.notes}</strong>
                                   </div>
-
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                {"variantId" in item.selection && (item.selection).variantId && (
                                   <div>
-                                    <span className="text-muted">Vegetarianos:</span>{" "}
-                                    <span className="fw-semibold">
-                                      {item.selection.people.vegetarian}
-                                    </span>
+                                    <span className="muted">Variante:</span>{" "}
+                                    <strong>{(item.selection).variantId}</strong>
                                   </div>
+                                )}
 
-                                  {item.selection.people.restricted.length > 0 && (
-                                    <div className="mt-1">
-                                      <span className="text-muted">Restricciones:</span>
-                                      <ul className="mb-0 ps-3">
-                                        {item.selection.people.restricted.map((r, idx) => (
-                                          <li key={`${r.label}-${idx}`}>
-                                            {r.label} ({r.qty})
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  )}
-
-                                  {item.selection.notes && (
-                                    <div className="mt-1">
-                                      <span className="text-muted">Notas:</span>{" "}
-                                      <span className="fw-semibold">{item.selection.notes}</span>
-                                    </div>
-                                  )}
-                                </>
-                              ) : (
-                                <>
-                                  {/* fallback para otros servicios */}
-                                  {item.selection.variantId && (
+                                {"people" in item.selection &&
+                                  typeof (item.selection).people === "number" && (
                                     <div>
-                                      <span className="text-muted">Variante:</span>{" "}
-                                      <span className="fw-semibold">
-                                        {item.selection.variantId}
-                                      </span>
+                                      <span className="muted">Personas:</span>{" "}
+                                      <strong>{(item.selection).people}</strong>
                                     </div>
                                   )}
 
-                                  {typeof item.selection.people === "number" && (
-                                    <div>
-                                      <span className="text-muted">Personas:</span>{" "}
-                                      <span className="fw-semibold">
-                                        {item.selection.people}
-                                      </span>
-                                    </div>
-                                  )}
+                                {"dateISO" in item.selection && (item.selection).dateISO && (
+                                  <div>
+                                    <span className="muted">Fecha:</span>{" "}
+                                    <strong>{item.selection.dateISO}</strong>
+                                  </div>
+                                )}
 
-                                  {item.selection.dateISO && (
-                                    <div>
-                                      <span className="text-muted">Fecha:</span>{" "}
-                                      <span className="fw-semibold">
-                                        {item.selection.dateISO}
-                                      </span>
-                                    </div>
-                                  )}
-
-                                  {item.selection.address && (
-                                    <div>
-                                      <span className="text-muted">Dirección:</span>{" "}
-                                      <span className="fw-semibold">
-                                        {item.selection.address}
-                                      </span>
-                                    </div>
-                                  )}
-                                </>
-                              )}
-                            </div>
+                                {"address" in item.selection && (item.selection).address && (
+                                  <div>
+                                    <span className="muted">Dirección:</span>{" "}
+                                    <strong>{(item.selection).address}</strong>
+                                  </div>
+                                )}
+                              </>
+                            )}
                           </div>
                         </div>
-                      </Col>
+                      </div>
 
-                      <Col xs={12} md={2}>
-                        <Form.Label className="text-muted small mb-1">
-                          Cantidad
-                        </Form.Label>
-                        <div className="d-flex gap-2 align-items-center">
+                      {/* Qty */}
+                      <div>
+                        <div className="cart-qty-label">Cantidad</div>
+                        <div className="cart-qty">
                           <Button
                             variant="outline-secondary"
                             size="sm"
-                            onClick={() =>
-                              dispatch({
-                                type: "DECREMENT",
-                                payload: { id: item.id },
-                              })
-                            }
+                            onClick={() => dispatch({ type: "DECREMENT", payload: { id: item.id } })}
                             disabled={isCheckingOut}
                           >
                             −
@@ -280,10 +253,7 @@ export default function CartPage() {
                             onChange={(e) =>
                               dispatch({
                                 type: "SET_QTY",
-                                payload: {
-                                  id: item.id,
-                                  quantity: Number(e.target.value),
-                                },
+                                payload: { id: item.id, quantity: Number(e.target.value) },
                               })
                             }
                             inputMode="numeric"
@@ -292,71 +262,54 @@ export default function CartPage() {
                           <Button
                             variant="outline-secondary"
                             size="sm"
-                            onClick={() =>
-                              dispatch({
-                                type: "INCREMENT",
-                                payload: { id: item.id },
-                              })
-                            }
+                            onClick={() => dispatch({ type: "INCREMENT", payload: { id: item.id } })}
                             disabled={isCheckingOut}
                           >
                             +
                           </Button>
                         </div>
-                      </Col>
-
-                      <Col xs={12} md={3} className="text-md-end">
-                        <div className="text-muted small mb-1">Subtotal</div>
-                        <div className="fw-semibold">
-                          {formatCOPFromCents(
-                            (item.estimatedUnitPriceCents ?? 0) *
-                              item.quantity
-                          )}
-                        </div>
 
                         <Button
                           variant="link"
-                          className="px-0 mt-2"
-                          onClick={() =>
-                            dispatch({
-                              type: "REMOVE_ITEM",
-                              payload: { id: item.id },
-                            })
-                          }
+                          className="cart-remove"
+                          onClick={() => dispatch({ type: "REMOVE_ITEM", payload: { id: item.id } })}
                           disabled={isCheckingOut}
                         >
                           Quitar
                         </Button>
-                      </Col>
-                    </Row>
-                  </Card.Body>
-                </Card>
+                      </div>
+
+                      {/* Price */}
+                      <div className="cart-price">
+                        <div className="label">Subtotal</div>
+                        <div className="value">
+                          {formatCOPFromCents((item.estimatedUnitPriceCents ?? 0) * item.quantity)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ))}
             </Col>
 
+            {/* Summary */}
             <Col lg={4}>
-              <Card>
-                <Card.Body>
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <div className="text-muted">Subtotal estimado</div>
-                    <div className="fw-semibold">
-                      {formatCOPFromCents(totals.subtotalCents)}
-                    </div>
+              <div className="cart-panel cart-summary">
+                <div className="cart-panel-body">
+                  <div className="cart-summary-row">
+                    <div>Subtotal estimado</div>
+                    <strong>{formatCOPFromCents(totals.subtotalCents)}</strong>
                   </div>
 
-                  <div className="text-muted small mb-3">
+                  <div className="cart-summary-note">
                     El total final se calcula en el checkout según precios oficiales.
                   </div>
 
                   <Button
-                    variant="primary"
+                    variant="outline-warning"
                     className="w-100"
                     onClick={onCheckout}
-                    disabled={
-                      !validation.ok ||
-                      state.items.length === 0 ||
-                      isCheckingOut
-                    }
+                    disabled={!validation.ok || state.items.length === 0 || isCheckingOut}
                   >
                     {isCheckingOut ? (
                       <>
@@ -368,14 +321,11 @@ export default function CartPage() {
                     )}
                   </Button>
 
-                  <Link
-                    to="/"
-                    className="btn btn-outline-secondary w-100 mt-2"
-                  >
+                  <Link to="/" className="btn btn-outline-light w-100 mt-2">
                     Seguir comprando
                   </Link>
-                </Card.Body>
-              </Card>
+                </div>
+              </div>
             </Col>
           </Row>
         )}
