@@ -5,10 +5,12 @@ import Stripe from "stripe";
 import { catalog, type CatalogOffering } from "../_data/offerings.catalog";
 import { saveCheckout, type CheckoutItemSnapshot } from "../_data/checkout.store";
 
-// ✅ LunchBox backend logic (ya los creaste en paso 2 y 3)
-// AJUSTA estos nombres si en tu archivo se llaman distinto:
+// Lunch Box backend logic 
 import { validateLunchBox } from "../_validators/lunchbox";
 import { calculateLunchBoxTotalCents } from "../_pricing/lunchbox";
+// Eventos Masivos backend logic 
+import { validateMassiveEvent } from "../_validators/masivos";
+import { calculateMassiveEventTotalCents } from "../_pricing/masivos";
 
 type ProviderId = "stripe" | "wompi";
 
@@ -265,7 +267,7 @@ function computeWompiTotalAmountAndSnapshot(items: CheckoutItemDTO[]) {
     const offering = catalogById[item.offeringId];
     if (!offering) throw new Error(`Offering not found: ${item.offeringId}`);
 
-    // 1) LunchBox: pricing dinámico y seguro
+    // 1) LunchBox
     if (offering.id === "lunch-box") {
       // validator debe aceptar unknown y devolver value tipado
       const v = validateLunchBox(item.selection);
@@ -273,6 +275,27 @@ function computeWompiTotalAmountAndSnapshot(items: CheckoutItemDTO[]) {
 
       const pricing = calculateLunchBoxTotalCents(v.value); 
       const unitTotalCents = pricing.totalCents // total del pedido
+
+      const qty = Math.max(1, Math.floor(item.quantity)); // normalmente 1
+      total += unitTotalCents * qty;
+
+      snapshot.push({
+        offeringId: offering.id,
+        title: offering.title,
+        quantity: qty,
+        unitPriceCents: unitTotalCents,
+        selection: v.value,
+      });
+
+      continue;
+    }
+    // 2) 
+    if (offering.id === "eventos-masivos") {
+      const v = validateMassiveEvent(item.selection);
+      if (!v.ok) throw new Error(v.error);
+
+      const pricing = calculateMassiveEventTotalCents(v.value);
+      const unitTotalCents = pricing.totalCents;
 
       const qty = Math.max(1, Math.floor(item.quantity)); // normalmente 1
       total += unitTotalCents * qty;

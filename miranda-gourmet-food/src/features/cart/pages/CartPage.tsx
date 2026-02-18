@@ -12,8 +12,6 @@ import { offeringsMock } from "../../catalog/data/offerings.mock";
 import { startCheckout } from "../../payments/services/payments.services";
 import { env } from "../../../app/config/env";
 
-import "./cart.css";
-
 /*
   Helper para lunch box
 */

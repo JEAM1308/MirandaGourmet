@@ -1,0 +1,223 @@
+/* ===========================
+   Service Modals (Global CSS)
+   Premium / glass / consistent
+=========================== */
+
+.svcModalBackdrop.modal-backdrop.show {
+  opacity: 0.78;
+  backdrop-filter: blur(6px);
+}
+
+.svcModalDialog {
+  margin: 1rem;
+}
+
+/* Modal content */
+.svcModal {
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  overflow: hidden;
+
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(198,168,91,0.12), transparent 60%),
+    rgba(10,10,12,0.92);
+
+  box-shadow: 0 30px 90px rgba(0,0,0,0.6);
+  color: rgba(255,255,255,0.86);
+}
+
+/* Header */
+.svcModalHeader {
+  background: rgba(0,0,0,0.25);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  padding: 16px 18px;
+}
+
+.svcModalTitle {
+  color: rgba(255,255,255,0.92);
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  margin: 0;
+}
+
+/* Close button */
+.svcModal .btn-close {
+  filter: invert(1);
+  opacity: 0.85;
+}
+.svcModal .btn-close:hover {
+  opacity: 1;
+}
+
+/* Body */
+.svcModalBody {
+  padding: 18px;
+}
+
+.svcSubtitle {
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 12px;
+}
+
+/* Hero image */
+.svcHero {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.svcHeroImg {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.01);
+}
+
+.svcHeroOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(700px 300px at 20% 10%, rgba(198,168,91,0.16), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.72));
+}
+
+/* Blocks */
+.svcBlock {
+  margin-bottom: 14px;
+}
+
+.svcBlockTitle {
+  color: rgba(255,255,255,0.72);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.svcMeta {
+  color: rgba(255,255,255,0.65);
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+.svcStrong {
+  color: rgba(255,255,255,0.92);
+  font-weight: 800;
+}
+
+.svcMuted {
+  color: rgba(255,255,255,0.65);
+  font-size: 0.92rem;
+}
+
+/* Inputs (dark-friendly) */
+.svcModal .form-control {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.90);
+  border-radius: 14px;
+}
+
+.svcModal .form-control::placeholder {
+  color: rgba(255,255,255,0.40);
+}
+
+.svcModal .form-control:focus {
+  box-shadow: 0 0 0 0.2rem rgba(198,168,91,0.20);
+  border-color: rgba(198,168,91,0.45);
+}
+
+/* Restriction chips */
+.svcChips {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.svcChip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+}
+
+/* Summary panel */
+.svcSummary {
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(10px);
+  padding: 14px;
+}
+
+.svcSummaryTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.svcRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.svcHr {
+  border-color: rgba(255,255,255,0.10);
+  margin: 10px 0;
+}
+
+.svcTotal {
+  color: rgba(255,255,255,0.92);
+  font-weight: 900;
+}
+
+/* Pills */
+.svcPill {
+  background: rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.88);
+  font-weight: 700;
+}
+
+.svcPillDark {
+  background: rgba(198,168,91,0.95) !important;
+  color: #0b0e13 !important;
+  border: 1px solid rgba(0,0,0,0.35);
+  font-weight: 900;
+}
+
+/* Footer */
+.svcModalFooter {
+  background: rgba(0,0,0,0.25);
+  border-top: 1px solid rgba(255,255,255,0.10);
+  padding: 14px 18px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Buttons look */
+.svcModalFooter .btn {
+  border-radius: 14px;
+  padding: 10px 14px;
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .svcHeroImg { height: 180px; }
+  .svcModalBody { padding: 14px; }
+  .svcModalFooter { flex-direction: column; }
+  .svcModalFooter .btn { width: 100%; }
+}

@@ -19,6 +19,14 @@ export const lunchBoxOffering: Offering = {
       vegetarianPerPersonCents: 2000 * 100,
       restrictionPerPersonCents: 3000 * 100,
     },
+    staffing: {
+      waiters: { perPeople: 0, min: 0 }
+    },
+    menus: {
+      basic:    { multiplier: 1.0,  label: "Menú Básico" },
+      standard: { multiplier: 1.0,  label: "Menú Estándar" },
+      gourmet:  { multiplier: 1.0,  label: "Menú Gourmet:" },
+    },
     constraints: {
       minPeople: 10,
       maxPeople: 200,
