@@ -250,7 +250,7 @@ function ServiceModal({
           Cerrar
         </Button>
 
-        <Link to="/quote" className="btn btn-outline-warning">
+        <Link to={`/quote?service=${service.id}`} className="btn btn-outline-warning">
           Quiero este servicio <BsArrowRight className="ms-1" />
         </Link>
       </Modal.Footer>
@@ -390,12 +390,7 @@ export default function CorporativosPage() {
                 Opciones base para arrancar rápido. Puedes personalizar todo.
               </div>
             </div>
-
-            <Link to="/quote" className="btn btn-outline-warning">
-              Cotizar
-            </Link>
           </div>
-
           <Row className="g-3">
             {services.map((s) => (
               <Col sm={6} md={4} lg={3} key={s.id}>
@@ -428,10 +423,13 @@ export default function CorporativosPage() {
                     </ul>
                   </Card.Body>
 
-                  <Card.Footer className="border-0 bg-transparent px-4 pb-4 pt-0">
-                    <Button variant="outline-light" onClick={() => setOpenId(s.id)}>
-                      Ver detalle
+                  <Card.Footer className="border-0 bg-transparent px-4 pb-3 pt-0 d-flex align-items-center justify-content-evenly gap-2">
+                    <Button variant="outline-light" onClick={() => setOpenId(s.id)} className="col-6 fs-6">
+                      Ver detalle 
                     </Button>
+                    <Link to={`/quote?service=${s.id}`} className="btn btn-outline-warning col-6 fs-6 d-flex align-items-center justify-content-center">
+                      Pedir&nbsp;<BsArrowRight/>
+                    </Link>
                   </Card.Footer>
                 </Card>
 

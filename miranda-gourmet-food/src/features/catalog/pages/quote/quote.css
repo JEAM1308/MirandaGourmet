@@ -1,0 +1,168 @@
+/* =========================
+   Quote Page – Base Layout
+========================= */
+
+.quote-page {
+  position: relative;
+  min-height: 100svh;
+  background-image: url("/assets/bg/corporativos.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.quote-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(198,168,91,0.10), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.85));
+  pointer-events: none;
+}
+
+.quote-page > .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================
+   Headings
+========================= */
+
+.quote-page h1 {
+  color: rgba(255,255,255,0.92);
+  font-weight: 700;
+}
+
+.quote-page .text-muted {
+  color: rgba(255,255,255,0.65) !important;
+}
+
+/* =========================
+   Card Styling (Glass)
+========================= */
+
+.quote-page .card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  backdrop-filter: blur(10px);
+  color: rgba(255,255,255,0.92);
+}
+
+.quote-page .card-body {
+  padding: 1.5rem;
+}
+
+/* =========================
+   Form Styling
+========================= */
+
+.quote-page .form-label {
+  color: rgba(255,255,255,0.82);
+  font-weight: 500;
+}
+
+.quote-page .form-control,
+.quote-page .form-select {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.92);
+  border-radius: 12px;
+  padding: 10px 12px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.quote-page .form-control::placeholder {
+  color: rgba(255,255,255,0.45);
+}
+
+.quote-page .form-control:focus,
+.quote-page .form-select:focus {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(198,168,91,0.55);
+  box-shadow: 0 0 0 0.2rem rgba(198,168,91,0.15);
+  color: rgba(255,255,255,0.92);
+}
+
+/* =========================
+   Alerts
+========================= */
+
+.quote-page .alert {
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.quote-page .alert-info {
+  background: rgba(198,168,91,0.12);
+  border-color: rgba(198,168,91,0.35);
+  color: rgba(255,255,255,0.92);
+}
+
+.quote-page .alert-warning {
+  background: rgba(255,180,0,0.12);
+  border-color: rgba(255,180,0,0.35);
+  color: rgba(255,255,255,0.92);
+}
+
+/* =========================
+   Buttons
+========================= */
+
+.quote-page .btn-outline-warning {
+  border-color: rgba(198,168,91,0.8);
+  color: rgba(255,255,255,0.92);
+}
+
+.quote-page .btn-outline-warning:hover {
+  background: rgba(198,168,91,0.95);
+  color: #0b0e13;
+}
+
+.quote-page .btn-outline-secondary {
+  border-color: rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.82);
+}
+
+.quote-page .btn-outline-secondary:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+/* =========================
+   Sidebar Card
+========================= */
+
+.quote-page ol {
+  padding-left: 18px;
+  color: rgba(255,255,255,0.75);
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 576px) {
+  .quote-page h1 {
+    font-size: 1.8rem;
+  }
+
+  .quote-page .card-body {
+    padding: 1.2rem;
+  }
+
+  .quote-page .btn-lg {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .quote-page {
+    padding-top: 20px;
+  }
+
+  .quote-page .card-body {
+    padding: 2rem;
+  }
+}

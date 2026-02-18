@@ -8,6 +8,7 @@ import WompiResultPage from "../../features/payments/pages/WompiResultPage";
 
 import HomePage from "../../features/catalog/pages/home/HomePage";
 import CorporativosPage from "../../features/catalog/pages/corporativos/CorporativosPage";
+import QuotePage from "../../features/catalog/pages/quote/QuotePage";
 import OrderDetailsPage from "../../features/orders/pages/OrderDetailPage";
 
 
@@ -31,7 +32,7 @@ export default function AppRouter() {
         <Route path="/" element={<HomePage />} />
         <Route path="/corporativos" element={<CorporativosPage />} />
         <Route path="/familiares" element={<ComingSoon title="Eventos familiares" />} />
-        <Route path="/quote" element={<ComingSoon title="Cotizar" />} />
+        <Route path="/quote" element={<QuotePage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
         <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
