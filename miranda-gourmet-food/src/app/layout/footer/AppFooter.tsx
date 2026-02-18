@@ -12,7 +12,6 @@ export default function AppFooter() {
   return (
     <footer className="foot-root">
       <div className="foot-overlay" />
-
       <Container className="foot-content">
         <Row className="gy-4">
           <Col md={6}>

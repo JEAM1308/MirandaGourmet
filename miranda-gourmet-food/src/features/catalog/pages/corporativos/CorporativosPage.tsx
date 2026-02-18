@@ -173,7 +173,6 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-
 function ServiceModal({
   show,
   onHide,
@@ -276,7 +275,7 @@ export default function CorporativosPage() {
       {/* HERO */}
       <section
         className="corp-page"
-        style={{ backgroundImage: 'url("/assets/bg/corporativos.png")' }}
+        style={{ backgroundImage: 'url("/assets/bg/corp/hero.png")' }}
       >
         <div className="corp-overlay" />
 
@@ -376,12 +375,11 @@ export default function CorporativosPage() {
           </header>
         </Container>
       </section>
-
       {/* PACKAGES */}
       <section 
       id="paquetes-corporativos"
       className="corp-section"
-      style={{ backgroundImage: 'url("/assets/bg/corp-packages.png")' }}
+      style={{ backgroundImage: 'url("/assets/bg/corp/packages.png")' }}
       >
 
         <Container className="corp-glass">
@@ -444,8 +442,9 @@ export default function CorporativosPage() {
       </section>
       <ServiceModal show={isOpen} onHide={() => setOpenId(null)} service={selected}/>
       {/* HOW IT WORKS */}
-      <section className="corp-section"
-      style={{ backgroundImage: 'url("/assets/bg/how-it-works.png")' }}
+      <section 
+      className="corp-section"
+      style={{ backgroundImage: 'url("/assets/bg/corp/how-it-works.png")' }}
       >
         <Container>
           <Row className="g-3">
@@ -509,9 +508,9 @@ export default function CorporativosPage() {
           </Row>
         </Container>
       </section>
-
       {/* TESTIMONIALS */}
-      <section className="corp-sectionTight">
+      <section 
+      className="corp-sectionTight">
         <Container>
           <h2 className="h4 mb-3 corp-glass text-center">Nuestros clientes</h2>
 
