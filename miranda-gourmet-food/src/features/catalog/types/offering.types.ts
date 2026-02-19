@@ -6,7 +6,11 @@ export type Offering = {
   title: string;
   subtitle?: string;
   image?: { src: string; alt: string };
+  minLeadTimeHours?: number;
+  required?: Array<"DATE" | "ADDRESS" | "PEOPLE" | "VARIANT">;
+  type?: "STANDARD_SERVICE" | "PREMIUM_SERVICE" | "QUOTE_SERVICE";
   pricing: {
+    kind: "STRIPE_PRICE" | "STRIPE_VARIANTS" | "QUOTE" | "TIERED_PER_PERSON";
     currency: "COP";
     model: "per_person_tiered";
     tiers: Array<{
@@ -58,5 +62,7 @@ export type ServiceSelection = {
     vegetarian: number;
     restricted: DietRestriction[];
   };
+  dateISO?: string;   // opcional por ahora
+  address?: string;   // opcional por ahora
   notes?: string;
 };

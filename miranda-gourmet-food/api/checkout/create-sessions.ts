@@ -1,27 +1,18 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import crypto from "crypto";
-import Stripe from "stripe";
 
 import { catalog, type CatalogOffering } from "../_data/offerings.catalog";
 import { saveCheckout, type CheckoutItemSnapshot } from "../_data/checkout.store";
 
-// Lunch Box backend logic 
-import { validateLunchBox } from "../_validators/lunchbox";
-import { calculateLunchBoxTotalCents } from "../_pricing/lunchbox";
-// Eventos Masivos backend logic 
-import { validateMassiveEvent } from "../_validators/masivos";
-import { calculateMassiveEventTotalCents } from "../_pricing/masivos";
+/* -------------------------------------------------------
+  Tipos del request (backend-safe)
+-------------------------------------------------------- */
+type ProviderId = "wompi";
 
-type ProviderId = "stripe" | "wompi";
-
-/**
- * ✅ En backend: selection debe ser unknown para soportar múltiples shapes
- * (LunchBox tiene people.regular/vegetarian/restricted, otros usan people:number, etc.)
- */
 type CheckoutItemDTO = {
   offeringId: string;
-  quantity: number;
-  selection: unknown;
+  quantity: number; // para estos servicios normalmente 1
+  selection: unknown; // ✅ backend-safe
 };
 
 type CreateCheckoutSessionRequest = {
@@ -31,22 +22,12 @@ type CreateCheckoutSessionRequest = {
 
 type CreateCheckoutSessionResponse = { url: string };
 
-function getEnv(name: string): string {
-  const v = process.env[name];
-  if (!v) throw new Error(`Missing env var: ${name}`);
-  return v;
-}
-
+/* -------------------------------------------------------
+  Utils
+-------------------------------------------------------- */
 function badRequest(res: VercelResponse, msg: string) {
   return res.status(400).send(msg);
 }
-
-function indexCatalog(items: CatalogOffering[]) {
-  const byId: Record<string, CatalogOffering> = {};
-  for (const o of items) byId[o.id] = o;
-  return byId;
-}
-const catalogById = indexCatalog(catalog);
 
 function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
@@ -60,37 +41,194 @@ function getNumber(v: unknown): number | null {
   return typeof v === "number" && Number.isFinite(v) ? v : null;
 }
 
+function clampInt(n: number, min: number, max: number) {
+  if (!Number.isFinite(n)) return min;
+  return Math.max(min, Math.min(max, Math.floor(n)));
+}
+
 function isValidISODate(value: string): boolean {
   const d = new Date(value);
   return !Number.isNaN(d.getTime());
 }
 
-/**
- * ✅ Valida ítems “genéricos” (no LunchBox)
- * Solo aplica reglas basadas en offering.required, quantitySource, lead time, etc.
- */
-function validateGenericItem(item: CheckoutItemDTO, offering: CatalogOffering, now: Date): string | null {
-  if (item.quantity <= 0) return "Invalid quantity.";
+function indexCatalog(items: CatalogOffering[]) {
+  const byId: Record<string, CatalogOffering> = {};
+  for (const o of items) byId[o.id] = o;
+  return byId;
+}
+const catalogById = indexCatalog(catalog);
 
-  if (offering.type === "QUOTE_SERVICE" || offering.pricing.kind === "QUOTE") {
-    return `Offering "${offering.title}" requires quote; checkout not allowed.`;
+/* -------------------------------------------------------
+  ServiceSelection (estandarizado) — backend replica
+-------------------------------------------------------- */
+type MenuId = "basic" | "standard" | "gourmet";
+type DietRestriction = { label: string; qty: number };
+
+type ServiceSelection = {
+  menu: MenuId;
+  people: {
+    regular: number;
+    vegetarian: number;
+    restricted: DietRestriction[];
+  };
+  notes?: string;
+  // si luego agregas dateISO/address aquí también, lo soportamos:
+  dateISO?: string;
+  address?: string;
+};
+
+type ParseResult<T> = { ok: true; value: T } | { ok: false; error: string };
+
+function parseServiceSelection(sel: unknown): ParseResult<ServiceSelection> {
+  if (!isObject(sel)) return { ok: false, error: "selection must be an object." };
+
+  const menu = getString(sel.menu);
+  if (menu !== "basic" && menu !== "standard" && menu !== "gourmet") {
+    return { ok: false, error: 'selection.menu must be "basic" | "standard" | "gourmet".' };
   }
 
+  const peopleRaw = (sel as Record<string, unknown>).people;
+  if (!isObject(peopleRaw)) return { ok: false, error: "selection.people must be an object." };
+
+  const regular = getNumber(peopleRaw.regular);
+  const vegetarian = getNumber(peopleRaw.vegetarian);
+  const restrictedRaw = (peopleRaw as Record<string, unknown>).restricted;
+
+  if (regular === null || vegetarian === null) {
+    return { ok: false, error: "people.regular and people.vegetarian must be numbers." };
+  }
+  if (!Array.isArray(restrictedRaw)) {
+    return { ok: false, error: "people.restricted must be an array." };
+  }
+
+  const restricted: DietRestriction[] = [];
+  for (const r of restrictedRaw) {
+    if (!isObject(r)) return { ok: false, error: "each restriction must be an object." };
+    const label = getString(r.label);
+    const qty = getNumber(r.qty);
+    if (!label || label.trim().length === 0) return { ok: false, error: "restriction.label is required." };
+    if (qty === null || qty <= 0) return { ok: false, error: "restriction.qty must be a positive number." };
+    restricted.push({ label: label.trim(), qty: Math.floor(qty) });
+  }
+
+  const notes = getString(sel.notes) ?? undefined;
+  const dateISO = getString(sel.dateISO) ?? undefined;
+  const address = getString(sel.address) ?? undefined;
+
+  return {
+    ok: true,
+    value: {
+      menu,
+      people: {
+        regular: Math.floor(regular),
+        vegetarian: Math.floor(vegetarian),
+        restricted,
+      },
+      notes,
+      dateISO,
+      address,
+    },
+  };
+}
+
+/* -------------------------------------------------------
+  Pricing para TIERED_PER_PERSON (backend)
+-------------------------------------------------------- */
+type TieredPricing = Extract<CatalogOffering["pricing"], { kind: "TIERED_PER_PERSON" }>;
+
+function findTier(pricing: TieredPricing, totalPeople: number) {
+  return pricing.tiers.find((t) => totalPeople >= t.minPeople && totalPeople <= t.maxPeople) ?? null;
+}
+
+function computeTotalPeople(sel: ServiceSelection) {
+  const restrictedQty = sel.people.restricted.reduce((s, r) => s + r.qty, 0);
+  return sel.people.regular + sel.people.vegetarian + restrictedQty;
+}
+
+function computeWaitersRequired(pricing: TieredPricing, totalPeople: number) {
+  const { minWaiters, peoplePerWaiter } = pricing.staffing;
+
+  if (peoplePerWaiter <= 0) return minWaiters;
+  if (minWaiters === 0 && peoplePerWaiter >= 9999) return 0;
+
+  const byRatio = Math.ceil(totalPeople / peoplePerWaiter);
+  return Math.max(minWaiters, byRatio);
+}
+
+function priceTieredOffering(offering: CatalogOffering, sel: ServiceSelection): ParseResult<{
+  totalPeople: number;
+  unitPriceCents: number; // per person ya con menú
+  baseSubtotalCents: number;
+  vegExtraCents: number;
+  restExtraCents: number;
+  totalCents: number;
+  waitersRequired: number;
+}> {
+  if (offering.pricing.kind !== "TIERED_PER_PERSON") {
+    return { ok: false, error: `Offering "${offering.title}" is not tiered.` };
+  }
+
+  const p = offering.pricing;
+
+  const totalPeople = computeTotalPeople(sel);
+  const minP = p.constraints.minPeople;
+  const maxP = p.constraints.maxPeople;
+
+  if (totalPeople < minP || totalPeople > maxP) {
+    return { ok: false, error: `Total people must be between ${minP} and ${maxP}.` };
+  }
+
+  if (sel.people.regular < 0 || sel.people.vegetarian < 0) {
+    return { ok: false, error: "People counts cannot be negative." };
+  }
+
+  const maxTypes = p.constraints.maxRestrictionTypes;
+  if (sel.people.restricted.length > maxTypes) {
+    return { ok: false, error: `Max restriction types exceeded (${maxTypes}).` };
+  }
+
+  const tier = findTier(p, totalPeople);
+  if (!tier) return { ok: false, error: "No tier found for total people." };
+
+  const menuCfg = p.menus[sel.menu];
+  if (!menuCfg) return { ok: false, error: "Invalid menu." };
+
+  // unit price per person (tier base) * menu multiplier
+  const unitPriceCents = Math.round(tier.unitPriceCents * menuCfg.multiplier);
+
+  const baseSubtotalCents = totalPeople * unitPriceCents;
+
+  const vegExtraCents = sel.people.vegetarian * p.surcharges.vegetarianPerPersonCents;
+
+  const restrictedQty = sel.people.restricted.reduce((s, r) => s + r.qty, 0);
+  const restExtraCents = restrictedQty * p.surcharges.restrictionPerPersonCents;
+
+  const totalCents = baseSubtotalCents + vegExtraCents + restExtraCents;
+
+  const waitersRequired = computeWaitersRequired(p, totalPeople);
+
+  return {
+    ok: true,
+    value: {
+      totalPeople,
+      unitPriceCents,
+      baseSubtotalCents,
+      vegExtraCents,
+      restExtraCents,
+      totalCents,
+      waitersRequired,
+    },
+  };
+}
+
+/* -------------------------------------------------------
+  Validaciones genéricas del offering (DATE/ADDRESS)
+-------------------------------------------------------- */
+function validateOfferingRequirements(offering: CatalogOffering, sel: ServiceSelection, now: Date): string | null {
   const required = offering.required ?? [];
-  const sel = isObject(item.selection) ? item.selection : {};
-
-  if (required.includes("VARIANT")) {
-    const variantId = getString(sel.variantId);
-    if (!variantId || variantId.trim().length === 0) return `Missing variant for "${offering.title}".`;
-  }
-
-  if (required.includes("PEOPLE")) {
-    const p = getNumber(sel.people);
-    if (p === null || p <= 0) return `Missing/invalid people for "${offering.title}".`;
-  }
 
   if (required.includes("DATE")) {
-    const dateISO = getString(sel.dateISO);
+    const dateISO = sel.dateISO;
     if (!dateISO || !isValidISODate(dateISO)) return `Missing/invalid date for "${offering.title}".`;
 
     const lead = offering.minLeadTimeHours ?? 0;
@@ -101,132 +239,19 @@ function validateGenericItem(item: CheckoutItemDTO, offering: CatalogOffering, n
   }
 
   if (required.includes("ADDRESS")) {
-    const addr = getString(sel.address);
+    const addr = sel.address;
     if (!addr || addr.trim().length === 0) return `Missing address for "${offering.title}".`;
   }
 
   return null;
 }
 
-/**
- * ✅ Para offerings “normales”: quantitySource=PEOPLE usa selection.people:number
- * ✅ Para LunchBox: la cantidad “people” vive dentro de selection (no en quantity),
- *    así que tratamos quantity como “número de pedidos” (normalmente 1)
- */
-function resolveBaseQuantity(item: CheckoutItemDTO, offering: CatalogOffering): number {
-  if (offering.quantitySource === "PEOPLE") {
-    const sel = isObject(item.selection) ? item.selection : {};
-    const p = getNumber(sel.people);
-    return p && p > 0 ? Math.floor(p) : 1;
-  }
-  return Math.max(1, Math.floor(item.quantity));
-}
-
-/* ---------------------------
-   STRIPE
----------------------------- */
-const stripe = new Stripe(getEnv("STRIPE_SECRET_KEY"));
-
-function resolveStripeBasePriceId(item: CheckoutItemDTO, offering: CatalogOffering): string | null {
-  const pricing = offering.pricing;
-
-  if (pricing.kind === "STRIPE_PRICE") return pricing.stripePriceId;
-
-  if (pricing.kind === "STRIPE_VARIANTS") {
-    const sel = isObject(item.selection) ? item.selection : {};
-    const variantId = getString(sel.variantId);
-    if (!variantId) return null;
-    return pricing.variants[variantId] ?? null;
-  }
-
-  return null;
-}
-
-async function createStripeSession(items: CheckoutItemDTO[], siteUrl: string): Promise<CreateCheckoutSessionResponse> {
-  const now = new Date();
-  const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
-  const metadata: Record<string, string> = {};
-
-  for (const item of items) {
-    const offering = catalogById[item.offeringId];
-    if (!offering) throw new Error(`Offering not found: ${item.offeringId}`);
-
-    // ⚠️ Si es LunchBox, Stripe no está integrado todavía con pricing dinámico
-    // (si lo quieres con Stripe, hay que crear Price “custom_amount” o PaymentIntent server-side)
-    if (offering.id === "lunch-box") {
-      throw new Error('LunchBox requires dynamic pricing; use Wompi flow for now.');
-    }
-
-    const err = validateGenericItem(item, offering, now);
-    if (err) throw new Error(err);
-
-    const basePriceId = resolveStripeBasePriceId(item, offering);
-    if (!basePriceId) throw new Error(`Could not resolve Stripe base price for: ${offering.title}`);
-
-    const baseQty = resolveBaseQuantity(item, offering);
-    line_items.push({ price: basePriceId, quantity: baseQty });
-
-    const sel = isObject(item.selection) ? item.selection : {};
-    const addonIds = (Array.isArray(sel.addonIds) ? sel.addonIds : []) as unknown[];
-
-    if (addonIds.length > 0 && offering.addons) {
-      for (const addonIdRaw of addonIds) {
-        const addonId = typeof addonIdRaw === "string" ? addonIdRaw : null;
-        if (!addonId) throw new Error(`Invalid addon id for "${offering.title}".`);
-
-        const addonPriceId = offering.addons[addonId];
-        if (!addonPriceId) throw new Error(`Invalid addon "${addonId}" for "${offering.title}".`);
-        line_items.push({ price: addonPriceId, quantity: 1 });
-      }
-    }
-
-    metadata[`item_${item.offeringId}`] = JSON.stringify({
-      offeringId: item.offeringId,
-      selection: item.selection,
-      qty: item.quantity,
-    });
-  }
-
-  const session = await stripe.checkout.sessions.create({
-    mode: "payment",
-    line_items,
-    success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${siteUrl}/checkout/cancel`,
-    metadata,
-  });
-
-  if (!session.url) throw new Error("Stripe session URL missing.");
-  return { url: session.url };
-}
-
-/* ---------------------------
-   WOMPI
----------------------------- */
+/* -------------------------------------------------------
+  WOMPI: firma + URL (pagas total de una vez)
+-------------------------------------------------------- */
 function wompiSignature(reference: string, amountInCents: number, currency: "COP", integritySecret: string) {
   const raw = `${reference}${amountInCents}${currency}${integritySecret}`;
   return crypto.createHash("sha256").update(raw).digest("hex");
-}
-
-function resolveWompiBaseAmount(item: CheckoutItemDTO, offering: CatalogOffering): number | null {
-  const p = offering.wompiPricing;
-  if (!p) return null;
-
-  if (p.kind === "AMOUNT") return p.amountInCents;
-
-  if (p.kind === "VARIANTS") {
-    const sel = isObject(item.selection) ? item.selection : {};
-    const variantId = getString(sel.variantId);
-    if (!variantId) return null;
-    return p.variants[variantId] ?? null;
-  }
-
-  return null;
-}
-
-function resolveWompiAddonAmount(offering: CatalogOffering, addonId: string): number | null {
-  const map = offering.wompiAddons;
-  if (!map) return null;
-  return map[addonId] ?? null;
 }
 
 function createWompiRedirectUrl(params: {
@@ -239,6 +264,7 @@ function createWompiRedirectUrl(params: {
 }) {
   const currency = params.currency ?? "COP";
   const signature = wompiSignature(params.reference, params.amountInCents, currency, params.integritySecret);
+
   const redirectUrl = `${params.siteUrl}/checkout/wompi-result`;
 
   const url = new URL(`${params.siteUrl}/pay/wompi`);
@@ -252,12 +278,10 @@ function createWompiRedirectUrl(params: {
   return url.toString();
 }
 
-/**
- * ✅ Total seguro para Wompi:
- * - Si offering === lunch-box => usa validator + pricing backend
- * - Si no => usa config wompiPricing y addons como antes
- */
-function computeWompiTotalAmountAndSnapshot(items: CheckoutItemDTO[]) {
+/* -------------------------------------------------------
+  Main: compute total + snapshot (solo tiered por ahora)
+-------------------------------------------------------- */
+function computeTotalAndSnapshot(items: CheckoutItemDTO[]) {
   const now = new Date();
   let total = 0;
 
@@ -267,138 +291,108 @@ function computeWompiTotalAmountAndSnapshot(items: CheckoutItemDTO[]) {
     const offering = catalogById[item.offeringId];
     if (!offering) throw new Error(`Offering not found: ${item.offeringId}`);
 
-    // 1) LunchBox
-    if (offering.id === "lunch-box") {
-      // validator debe aceptar unknown y devolver value tipado
-      const v = validateLunchBox(item.selection);
-      if (!v.ok) throw new Error(v.error);
+    if (offering.type === "QUOTE_SERVICE" || offering.pricing.kind === "QUOTE") {
+      throw new Error(`Offering "${offering.title}" requires quote; checkout not allowed.`);
+    }
 
-      const pricing = calculateLunchBoxTotalCents(v.value); 
-      const unitTotalCents = pricing.totalCents // total del pedido
+    // solo cobramos “total del servicio” (qty normalmente 1)
+    const qty = Math.max(1, Math.floor(item.quantity));
 
-      const qty = Math.max(1, Math.floor(item.quantity)); // normalmente 1
-      total += unitTotalCents * qty;
+    // ✅ soportamos TIERED_PER_PERSON con selection estandarizado
+    if (offering.pricing.kind === "TIERED_PER_PERSON") {
+      const parsed = parseServiceSelection(item.selection);
+      if (!parsed.ok) throw new Error(parsed.error);
+
+      const reqErr = validateOfferingRequirements(offering, parsed.value, now);
+      if (reqErr) throw new Error(reqErr);
+
+      const priced = priceTieredOffering(offering, parsed.value);
+      if (!priced.ok) throw new Error(priced.error);
+
+      const unitTotalCents = priced.value.totalCents; // “total del pedido” (no per-person)
+      const lineTotal = unitTotalCents * qty;
+
+      total += lineTotal;
 
       snapshot.push({
         offeringId: offering.id,
         title: offering.title,
         quantity: qty,
         unitPriceCents: unitTotalCents,
-        selection: v.value,
-      });
-
-      continue;
-    }
-    // 2) 
-    if (offering.id === "eventos-masivos") {
-      const v = validateMassiveEvent(item.selection);
-      if (!v.ok) throw new Error(v.error);
-
-      const pricing = calculateMassiveEventTotalCents(v.value);
-      const unitTotalCents = pricing.totalCents;
-
-      const qty = Math.max(1, Math.floor(item.quantity)); // normalmente 1
-      total += unitTotalCents * qty;
-
-      snapshot.push({
-        offeringId: offering.id,
-        title: offering.title,
-        quantity: qty,
-        unitPriceCents: unitTotalCents,
-        selection: v.value,
+        selection: parsed.value, // guardamos el selection tipado (pero snapshot usa unknown)
       });
 
       continue;
     }
 
-    // 2) Otros offerings: reglas genéricas + config wompiPricing
-    const err = validateGenericItem(item, offering, now);
-    if (err) throw new Error(err);
-
-    const baseAmount = resolveWompiBaseAmount(item, offering);
-    if (baseAmount === null) throw new Error(`Wompi amount not configured for offering: ${offering.title}`);
-
-    const baseQty = resolveBaseQuantity(item, offering);
-    const baseLine = baseAmount * baseQty;
-    total += baseLine;
-
-    // addons
-    const sel = isObject(item.selection) ? item.selection : {};
-    const addonIdsRaw = Array.isArray(sel.addonIds) ? sel.addonIds : [];
-    for (const addonIdRaw of addonIdsRaw) {
-      const addonId = typeof addonIdRaw === "string" ? addonIdRaw : null;
-      if (!addonId) throw new Error(`Invalid addon id for "${offering.title}".`);
-
-      const addonAmount = resolveWompiAddonAmount(offering, addonId);
-      if (addonAmount === null) throw new Error(`Wompi addon not configured: ${addonId} for ${offering.title}`);
-      total += addonAmount;
-    }
-
-    snapshot.push({
-      offeringId: offering.id,
-      title: offering.title,
-      quantity: baseQty,
-      unitPriceCents: baseAmount,
-      selection: item.selection,
-    });
+    // Si aún tienes cosas legacy con wompiPricing fijo, puedes permitirlo aquí.
+    // Por ahora: explícito para evitar cobros mal calculados.
+    throw new Error(`Offering "${offering.title}" has unsupported pricing kind for Wompi: ${offering.pricing.kind}`);
   }
 
   return { totalAmountCents: total, itemsSnapshot: snapshot };
 }
 
+/* -------------------------------------------------------
+  Handler
+-------------------------------------------------------- */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
   try {
-    const body = req.body as CreateCheckoutSessionRequest;
+    const body: unknown = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
 
-    if (!body || !body.provider) return badRequest(res, "Missing provider.");
-    if (!Array.isArray(body.items) || body.items.length === 0) return badRequest(res, "Empty cart.");
+    if (!isObject(body)) return badRequest(res, "Invalid body.");
+    const provider = getString(body.provider);
+    const itemsRaw = (body as Record<string, unknown>).items;
+
+    if (provider !== "wompi") return badRequest(res, "Only provider=wompi is supported.");
+    if (!Array.isArray(itemsRaw) || itemsRaw.length === 0) return badRequest(res, "Empty cart.");
+
+    const items: CheckoutItemDTO[] = itemsRaw.map((x) => {
+      if (!isObject(x)) throw new Error("Invalid item.");
+      const offeringId = getString(x.offeringId);
+      const quantity = getNumber(x.quantity);
+      const selection = (x as Record<string, unknown>).selection;
+
+      if (!offeringId) throw new Error("Missing offeringId.");
+      if (quantity === null) throw new Error("Missing quantity.");
+
+      return { offeringId, quantity, selection };
+    });
+
+    const publicKey = process.env.WOMPI_PUBLIC_KEY;
+    const integritySecret = process.env.WOMPI_INTEGRITY_KEY;
+
+    if (!publicKey || !integritySecret) {
+      return res.status(501).send("Wompi is not configured. Set WOMPI_PUBLIC_KEY and WOMPI_INTEGRITY_KEY env vars.");
+    }
 
     const siteUrl = process.env.VITE_PUBLIC_SITE_URL || "http://localhost:3000";
 
-    if (body.provider === "stripe") {
-      const out = await createStripeSession(body.items, siteUrl);
-      return res.status(200).json(out);
-    }
+    const { totalAmountCents, itemsSnapshot } = computeTotalAndSnapshot(items);
+    if (totalAmountCents <= 0) return badRequest(res, "Invalid total amount.");
 
-    if (body.provider === "wompi") {
-      const publicKey = process.env.WOMPI_PUBLIC_KEY;
-      const integritySecret = process.env.WOMPI_INTEGRITY_KEY; // (si lo tienes como SECRET, cambia aquí)
+    const reference = `MGF-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
 
-      if (!publicKey || !integritySecret) {
-        return res
-          .status(501)
-          .send("Wompi is not configured. Set WOMPI_PUBLIC_KEY and WOMPI_INTEGRITY_KEY env vars.");
-      }
+    saveCheckout({
+      reference,
+      provider: "wompi",
+      items: itemsSnapshot,
+      totalAmountCents,
+      createdAtISO: new Date().toISOString(),
+    });
 
-      const { totalAmountCents, itemsSnapshot } = computeWompiTotalAmountAndSnapshot(body.items);
+    const url = createWompiRedirectUrl({
+      siteUrl,
+      publicKey,
+      integritySecret,
+      reference,
+      amountInCents: totalAmountCents,
+    });
 
-      if (totalAmountCents <= 0) return badRequest(res, "Invalid total amount.");
-
-      const reference = `MGF-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
-
-      // ✅ Guardamos checkout con total seguro + snapshot
-      saveCheckout({
-        reference,
-        provider: "wompi",
-        items: itemsSnapshot, // ahora incluye title/unitPriceCents reales
-        totalAmountCents,
-        createdAtISO: new Date().toISOString(),
-      });
-
-      const url = createWompiRedirectUrl({
-        siteUrl,
-        publicKey,
-        integritySecret,
-        reference,
-        amountInCents: totalAmountCents,
-      });
-
-      return res.status(200).json({ url } satisfies CreateCheckoutSessionResponse);
-    }
-
-    return badRequest(res, "Invalid provider.");
+    const out: CreateCheckoutSessionResponse = { url };
+    return res.status(200).json(out);
   } catch (e) {
     console.error(e);
     return res.status(500).send(e instanceof Error ? e.message : "Internal Server Error");

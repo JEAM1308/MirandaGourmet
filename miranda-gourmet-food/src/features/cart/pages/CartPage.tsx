@@ -12,35 +12,6 @@ import { offeringsMock } from "../../catalog/data/offerings.mock";
 import { startCheckout } from "../../payments/services/payments.services";
 import { env } from "../../../app/config/env";
 
-/*
-  Helper para lunch box
-*/
-type LunchBoxSelection = {
-  people: {
-    regular: number;
-    vegetarian: number;
-    restricted: { label: string; qty: number }[];
-  };
-  notes?: string;
-};
-
-function isLunchBoxSelection(sel: unknown): sel is LunchBoxSelection {
-  if (!sel || typeof sel !== "object") return false;
-
-  const maybe = sel as LunchBoxSelection;
-
-  return (
-    typeof maybe.people?.regular === "number" &&
-    typeof maybe.people?.vegetarian === "number" &&
-    Array.isArray(maybe.people?.restricted)
-  );
-}
-
-function totalLunchBoxPeople(sel: LunchBoxSelection) {
-  const restricted = sel.people.restricted.reduce((s, r) => s + r.qty, 0);
-  return sel.people.regular + sel.people.vegetarian + restricted;
-}
-
 function formatCOPFromCents(amountCents: number) {
   const amount = amountCents / 100;
   return amount.toLocaleString("es-CO", {
@@ -48,6 +19,13 @@ function formatCOPFromCents(amountCents: number) {
     currency: "COP",
     maximumFractionDigits: 0,
   });
+}
+
+function totalPeople(selection: {
+  people: { regular: number; vegetarian: number; restricted: { qty: number }[] };
+}) {
+  const restrictedQty = selection.people.restricted.reduce((s, r) => s + r.qty, 0);
+  return selection.people.regular + selection.people.vegetarian + restrictedQty;
 }
 
 export default function CartPage() {
@@ -83,7 +61,8 @@ export default function CartPage() {
     }
   };
 
-  const providerLabel = env.paymentProvider === "wompi" ? "Pagar con Wompi" : "Pagar con Stripe";
+  const providerLabel =
+    env.paymentProvider === "wompi" ? "Pagar con Wompi" : "Pagar con Stripe";
 
   return (
     <section className="cart-page">
@@ -158,75 +137,60 @@ export default function CartPage() {
                             {item.unitLabel ? `Unidad: ${item.unitLabel}` : "Servicio"}
                           </div>
 
+                          {/* ✅ selection SIEMPRE es ServiceSelection */}
                           <div className="cart-item-details">
-                            {isLunchBoxSelection(item.selection) ? (
-                              <>
-                                <div>
-                                  <span className="muted">Total personas:</span>{" "}
-                                  <strong>{totalLunchBoxPeople(item.selection)}</strong>
-                                </div>
+                            <div>
+                              <span className="muted">Menú:</span>{" "}
+                              <strong>{item.selection.menu}</strong>
+                            </div>
 
-                                <div>
-                                  <span className="muted">Normales:</span>{" "}
-                                  <strong>{item.selection.people.regular}</strong>
-                                </div>
+                            <div>
+                              <span className="muted">Total personas:</span>{" "}
+                              <strong>{totalPeople(item.selection)}</strong>
+                            </div>
 
-                                <div>
-                                  <span className="muted">Vegetarianos:</span>{" "}
-                                  <strong>{item.selection.people.vegetarian}</strong>
-                                </div>
+                            <div>
+                              <span className="muted">Normales:</span>{" "}
+                              <strong>{item.selection.people.regular}</strong>
+                            </div>
 
-                                {item.selection.people.restricted.length > 0 && (
-                                  <div className="mt-1">
-                                    <span className="muted">Restricciones:</span>
-                                    <ul className="mb-0 ps-3">
-                                      {item.selection.people.restricted.map((r, idx) => (
-                                        <li key={`${r.label}-${idx}`}>
-                                          {r.label} ({r.qty})
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                )}
+                            <div>
+                              <span className="muted">Vegetarianos:</span>{" "}
+                              <strong>{item.selection.people.vegetarian}</strong>
+                            </div>
 
-                                {item.selection.notes && (
-                                  <div className="mt-1">
-                                    <span className="muted">Notas:</span>{" "}
-                                    <strong>{item.selection.notes}</strong>
-                                  </div>
-                                )}
-                              </>
-                            ) : (
-                              <>
-                                {"variantId" in item.selection && (item.selection).variantId && (
-                                  <div>
-                                    <span className="muted">Variante:</span>{" "}
-                                    <strong>{(item.selection).variantId}</strong>
-                                  </div>
-                                )}
+                            {item.selection.people.restricted.length > 0 && (
+                              <div className="mt-1">
+                                <span className="muted">Restricciones:</span>
+                                <ul className="mb-0 ps-3">
+                                  {item.selection.people.restricted.map((r, idx) => (
+                                    <li key={`${r.label}-${idx}`}>
+                                      {r.label} ({r.qty})
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
 
-                                {"people" in item.selection &&
-                                  typeof (item.selection).people === "number" && (
-                                    <div>
-                                      <span className="muted">Personas:</span>{" "}
-                                      <strong>{(item.selection).people}</strong>
-                                    </div>
-                                  )}
+                            {item.selection.dateISO && (
+                              <div className="mt-1">
+                                <span className="muted">Fecha:</span>{" "}
+                                <strong>{item.selection.dateISO}</strong>
+                              </div>
+                            )}
 
-                                {"dateISO" in item.selection && (item.selection).dateISO && (
-                                  <div>
-                                    <span className="muted">Fecha:</span>{" "}
-                                    <strong>{item.selection.dateISO}</strong>
-                                  </div>
-                                )}
+                            {item.selection.address && (
+                              <div className="mt-1">
+                                <span className="muted">Dirección:</span>{" "}
+                                <strong>{item.selection.address}</strong>
+                              </div>
+                            )}
 
-                                {"address" in item.selection && (item.selection).address && (
-                                  <div>
-                                    <span className="muted">Dirección:</span>{" "}
-                                    <strong>{(item.selection).address}</strong>
-                                  </div>
-                                )}
-                              </>
+                            {item.selection.notes && (
+                              <div className="mt-1">
+                                <span className="muted">Notas:</span>{" "}
+                                <strong>{item.selection.notes}</strong>
+                              </div>
                             )}
                           </div>
                         </div>

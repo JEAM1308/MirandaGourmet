@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Button, Card, Col, Container, Row } from "react-bootstrap";
 import { BsArrowRight, BsCheck2Circle, BsClock, BsPeople, BsStars } from "react-icons/bs";
-import ServiceModals from "../../components/xServiceModals";
+import ServiceModals from "../../components/ServicesModals";
 import { offeringsMock } from "../../data/offerings.mock";
 import { useCart } from "../../../cart/hooks/useCart";
 

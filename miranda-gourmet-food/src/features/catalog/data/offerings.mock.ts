@@ -14,14 +14,14 @@ export const offeringsMock: Offering[] = [
       alt: "Lunch Box",
     },
     pricing: {
-      currency: "COP",
-      model: "per_person_tiered",
-
+        kind: "TIERED_PER_PERSON",
+        currency: "COP",
+        model: "per_person_tiered",
       // Precio base del menú BASIC
-      tiers: [
-        { minPeople: 5,  maxPeople: 15, unitPriceCents: 3200000 }, // 32.000
-        { minPeople: 16, maxPeople: 30, unitPriceCents: 3000000 }, // 30.000
-      ],
+        tiers: [
+            { minPeople: 5,  maxPeople: 15, unitPriceCents: 3200000 }, // 32.000
+            { minPeople: 16, maxPeople: 30, unitPriceCents: 3000000 }, // 30.000
+        ],
 
       // Multiplicadores por menú
       menus: {
@@ -63,8 +63,9 @@ export const offeringsMock: Offering[] = [
       alt: "Eventos Masivos",
     },
     pricing: {
-      currency: "COP",
-      model: "per_person_tiered",
+        kind: "TIERED_PER_PERSON",
+        currency: "COP",
+        model: "per_person_tiered",
 
       tiers: [
         { minPeople: 50,  maxPeople: 150, unitPriceCents: 4500000 }, // 45.000
@@ -111,6 +112,7 @@ export const offeringsMock: Offering[] = [
       alt: "Entrega Empresarial",
     },
     pricing: {
+        kind: "TIERED_PER_PERSON",
       currency: "COP",
       model: "per_person_tiered",
 
@@ -158,6 +160,7 @@ export const offeringsMock: Offering[] = [
       alt: "Experiencia de Gala",
     },
     pricing: {
+        kind: "TIERED_PER_PERSON",
       currency: "COP",
       model: "per_person_tiered",
 

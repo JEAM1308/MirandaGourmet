@@ -4,7 +4,8 @@ export type DietRestriction = { label: string; qty: number };
 
 export type ServiceSelection = {
   menu: MenuId;
-  people: { regular: number; vegetarian: number; restricted: DietRestriction[] };
+  people: 
+    { regular: number; vegetarian: number; restricted: DietRestriction[] };
   notes?: string;
 };
 

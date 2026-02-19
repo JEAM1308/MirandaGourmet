@@ -186,6 +186,7 @@ export default function ServiceModals({
       onHide={onClose}
       centered
       size="lg"
+      scrollable
       dialogClassName="svcModalDialog"
       contentClassName="svcModal"
       backdropClassName="svcModalBackdrop"

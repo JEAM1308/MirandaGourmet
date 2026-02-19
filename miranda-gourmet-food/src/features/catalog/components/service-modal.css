@@ -52,6 +52,8 @@
 /* Body */
 .svcModalBody {
   padding: 18px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(198,168,91,0.4) transparent;
 }
 
 .svcSubtitle {

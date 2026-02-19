@@ -1,28 +1,30 @@
-
-import type { OfferingSelection } from "../../catalog/types/offering.types";
-
-export type CartItemId = string;
+import type { OfferingId } from "../../catalog/types/offering.types";
+import type { ServiceSelection } from "../../catalog/types/offering.types";
 
 export type CartItem = {
-  id: CartItemId;              // id único por línea (no por offering)
-  offeringId: string;
+  id: string; // uuid interno del carrito
+  offeringId: OfferingId;
+
   title: string;
-  image?: { src: string; alt: string };
+  unitLabel?: string;
 
-  // para UI (no confiamos en esto en backend, pero sirve)
-  unitLabel?: string;          // "caja", "persona", "paquete"
+  image?: { src: string; alt?: string };
+
+  quantity: number; // normalmente 1 en estos servicios
+  selection: ServiceSelection;
+
   estimatedUnitPriceCents?: number;
-  currency?: "COP" | "USD";
-
-  quantity: number;
-
-  selection: OfferingSelection; // configuración (people/date/address/variant/addons...)
-
-  // control
-  createdAtISO: string;
-  updatedAtISO: string;
 };
 
 export type CartState = {
   items: CartItem[];
 };
+
+
+export type DietRestriction = {
+  label: string;
+  qty: number;
+};
+
+export type MenuId = "basic" | "standard" | "gourmet";
+

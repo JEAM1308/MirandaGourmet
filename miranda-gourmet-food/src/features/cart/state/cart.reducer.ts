@@ -1,93 +1,54 @@
-import type { CartState, CartItem } from "../types/cart.types";
-import type { CartAction } from "./cart.actions";
-import { isSameLine } from "./cart.logic";
+// src/features/cart/state/cart.reducer.ts (o donde tengas el reducer)
+import type { CartItem } from "../types/cart.types";
 
-export const initialCartState: CartState = { items: [] };
+export type CartState = { items: CartItem[] };
 
-function nowISO() {
-  return new Date().toISOString();
-}
+export type CartAction =
+  | { type: "ADD_ITEM"; payload: Omit<CartItem, "id"> }   // 👈 importante
+  | { type: "REMOVE_ITEM"; payload: { id: string } }
+  | { type: "INCREMENT"; payload: { id: string } }
+  | { type: "DECREMENT"; payload: { id: string } }
+  | { type: "SET_QTY"; payload: { id: string; quantity: number } }
+  | { type: "CLEAR" };
 
-function generateId() {
-  // Suficiente para frontend; si quieres, luego metemos crypto.randomUUID()
-  return `ci_${Math.random().toString(36).slice(2)}_${Date.now()}`;
+const initialState: CartState = { items: [] };
+
+function uuid() {
+  return crypto.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
 }
 
 export function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "ADD_ITEM": {
-      const merge = action.mergeIfSame ?? true;
-      const payload = action.payload;
+      const item: CartItem = { id: uuid(), ...action.payload };
 
-      if (payload.quantity <= 0) return state;
-
-      if (merge) {
-        const existing = state.items.find((i) => isSameLine(i, payload));
-        if (existing) {
-          return {
-            items: state.items.map((i) =>
-              i.id === existing.id
-                ? { ...i, quantity: i.quantity + payload.quantity, updatedAtISO: nowISO() }
-                : i
-            ),
-          };
-        }
-      }
-
-      const newItem: CartItem = {
-        ...payload,
-        id: generateId(),
-        createdAtISO: nowISO(),
-        updatedAtISO: nowISO(),
-      };
-
-      return { items: [newItem, ...state.items] };
+      // si quieres “merge” por offeringId+selection, hazlo aquí (opcional)
+      return { ...state, items: [item, ...state.items] };
     }
 
     case "REMOVE_ITEM":
-      return { items: state.items.filter((i) => i.id !== action.payload.id) };
-
-    case "SET_QTY": {
-      const qty = Math.max(0, Math.floor(action.payload.quantity));
-      if (qty === 0) return { items: state.items.filter((i) => i.id !== action.payload.id) };
-      return {
-        items: state.items.map((i) =>
-          i.id === action.payload.id ? { ...i, quantity: qty, updatedAtISO: nowISO() } : i
-        ),
-      };
-    }
+      return { ...state, items: state.items.filter(i => i.id !== action.payload.id) };
 
     case "INCREMENT":
       return {
-        items: state.items.map((i) =>
-          i.id === action.payload.id
-            ? { ...i, quantity: i.quantity + 1, updatedAtISO: nowISO() }
-            : i
-        ),
+        ...state,
+        items: state.items.map(i => i.id === action.payload.id ? { ...i, quantity: i.quantity + 1 } : i),
       };
 
     case "DECREMENT":
       return {
-        items: state.items
-          .map((i) =>
-            i.id === action.payload.id
-              ? { ...i, quantity: i.quantity - 1, updatedAtISO: nowISO() }
-              : i
-          )
-          .filter((i) => i.quantity > 0),
+        ...state,
+        items: state.items.map(i => i.id === action.payload.id ? { ...i, quantity: Math.max(1, i.quantity - 1) } : i),
       };
 
-    case "UPDATE_SELECTION":
+    case "SET_QTY":
       return {
-        items: state.items.map((i) =>
-          i.id === action.payload.id
-            ? { ...i, selection: action.payload.selection, updatedAtISO: nowISO() }
-            : i
-        ),
+        ...state,
+        items: state.items.map(i => i.id === action.payload.id ? { ...i, quantity: Math.max(1, Math.floor(action.payload.quantity || 1)) } : i),
       };
 
     case "CLEAR":
-      return initialCartState;
+      return initialState;
 
     default:
       return state;

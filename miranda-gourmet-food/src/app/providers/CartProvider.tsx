@@ -1,22 +1,13 @@
-import React, { useEffect, useMemo, useReducer } from "react";
-import { cartReducer, initialCartState } from "../../features/cart/state/cart.reducer";
-import { loadCartState, saveCartState } from "../../features/cart/state/cart.storage";
+// src/app/providers/CartProvider.tsx (o donde lo tengas)
+import { useReducer } from "react";
 import { CartContext } from "../../features/cart/context/cart.context";
+import { cartReducer } from "../../features/cart/state/cart.reducer";
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(cartReducer, initialCartState, (init) => {
-    const stored = loadCartState();
-    return stored ?? init;
-  });
-
-  useEffect(() => {
-    saveCartState(state);
-  }, [state]);
-
-  const value = useMemo(() => ({ state, dispatch }), [state]);
+  const [state, dispatch] = useReducer(cartReducer, { items: [] });
 
   return (
-    <CartContext.Provider value={value}>
+    <CartContext.Provider value={{ state, dispatch }}>
       {children}
     </CartContext.Provider>
   );
