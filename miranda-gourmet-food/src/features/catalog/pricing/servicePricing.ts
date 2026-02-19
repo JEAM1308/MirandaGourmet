@@ -81,9 +81,9 @@ export function priceService(offering: Offering, selection: ServiceSelection): P
 
   // ---- Validate restricted entries
   for (const r of restricted) {
-    if (!r || typeof r !== "object") return { ok: false, error: "Invalid restriction entry." };
+    if (!r || typeof r !== "object") return { ok: false, error: "Restricción inválida." };
     if (typeof r.label !== "string" || r.label.trim().length === 0) {
-      return { ok: false, error: "Restriction label is required." };
+      return { ok: false, error: "Se requere una etiqueta para la restricción." };
     }
     if (!isFiniteNonNegInt(r.qty) || r.qty <= 0) {
       return { ok: false, error: "Restriction qty must be a positive integer." };
@@ -96,8 +96,8 @@ export function priceService(offering: Offering, selection: ServiceSelection): P
 
   // ---- Constraints from offering
   const c = offering.pricing.constraints;
-  if (totalPeople < c.minPeople) return { ok: false, error: `Minimum is ${c.minPeople} people.` };
-  if (totalPeople > c.maxPeople) return { ok: false, error: `Maximum is ${c.maxPeople} people.` };
+  if (totalPeople < c.minPeople) return { ok: false, error: `Para este servicio, el mínimo de personas es ${c.minPeople}.` };
+  if (totalPeople > c.maxPeople) return { ok: false, error: `Para este servicio, el máximo de personas es ${c.maxPeople}.` };
   if (restrictedTypes > c.maxRestrictionTypes) {
     return { ok: false, error: `Max restriction types is ${c.maxRestrictionTypes}.` };
   }
@@ -110,7 +110,7 @@ export function priceService(offering: Offering, selection: ServiceSelection): P
 
   // ---- Menu pricing
   const menuCfg = offering.pricing.menus?.[selection.menu];
-  if (!menuCfg) return { ok: false, error: "Unsupported menu option." };
+  if (!menuCfg) return { ok: false, error: "Opción de menú inválida." };
 
   const unitPriceCents = roundMoney(tierUnit * menuCfg.multiplier);
 

@@ -218,12 +218,12 @@ export default function ServiceModals({
 
         {/* MENU */}
         <div className="svcBlock">
-          <div className="svcBlockTitle">Menú</div>
+          <div className="svcBlockTitle">Escoge el Menú</div>
           <Row className="g-2">
             {(["basic", "standard", "gourmet"] as const).map((m) => (
               <Col xs={12} md={4} key={m}>
                 <Button
-                  variant={sel?.menu === m ? "dark" : "outline-dark"}
+                  variant={sel?.menu === m ? "warning" : "outline-secondary"}
                   className="w-100"
                   onClick={() => onChangeMenu(m)}
                 >
@@ -236,10 +236,10 @@ export default function ServiceModals({
 
         {/* PEOPLE */}
         <div className="svcBlock">
-          <div className="svcBlockTitle">Personas</div>
+          <div className="svcBlockTitle">Número de personas</div>
           <Row className="g-2">
             <Col xs={12} md={6}>
-              <Form.Label className="text-muted small">Normales</Form.Label>
+              <Form.Label className="text-muted small">Sin restricción</Form.Label>
               <Form.Control
                 type="number"
                 min={0}
