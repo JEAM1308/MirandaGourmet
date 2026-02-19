@@ -239,7 +239,7 @@ export default function ServiceModals({
           <div className="svcBlockTitle">Número de personas</div>
           <Row className="g-2">
             <Col xs={12} md={6}>
-              <Form.Label className="text-muted small">Sin restricción</Form.Label>
+              <Form.Label className="text-muted small">Platos sin restricción</Form.Label>
               <Form.Control
                 type="number"
                 min={0}
@@ -266,7 +266,7 @@ export default function ServiceModals({
 
         {/* RESTRICTIONS */}
         <div className="svcBlock">
-          <div className="svcBlockTitle">Restricciones</div>
+          <div className="svcBlockTitle">Restricciones Especiales</div>
 
           <Row className="g-2 align-items-end">
             <Col xs={12} md={7}>

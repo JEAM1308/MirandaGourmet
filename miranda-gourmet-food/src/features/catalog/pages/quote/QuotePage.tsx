@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Alert, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useSearchParams } from "react-router-dom";
-
+import { BsArrowRight } from "react-icons/bs";
 import {
   CORPORATE_SERVICES,
   type CorporateServiceId,
@@ -80,7 +80,7 @@ export default function QuotePage() {
           <Col lg={8}>
             <h1 className="h3 mb-1">Cotizar</h1>
             <div className="text-muted">
-              Cuéntanos lo esencial y te respondemos con una propuesta clara.
+              Si ya revisaste nuestra oferta y ninguno de nuestros paquetes se acomoda a tu necesidad, cuéntanos lo esencial y te respondemos con una propuesta clara.
             </div>
 
             {serviceId === "INVALID" && (
@@ -209,7 +209,7 @@ export default function QuotePage() {
 
                   <Col md={12}>
                     <Form.Group>
-                      <Form.Label>Notas</Form.Label>
+                      <Form.Label>Cuéntanos, ¿qué necesitas?</Form.Label>
                       <Form.Control
                         value={form.notes}
                         onChange={onChange("notes")}
@@ -221,17 +221,13 @@ export default function QuotePage() {
                   </Col>
                 </Row>
 
-                <div className="d-flex flex-column flex-sm-row gap-2 mt-4">
-                  <button className="btn btn-outline-warning btn-lg" type="button">
-                    Enviar solicitud
+                <div className="d-flex justify-content-end mt-3">
+                  <button 
+                  type="button"
+                  className="btn btn-outline-warning btn-lg col-sm-12 col-lg-4"
+                  >
+                    Enviar solicitud <BsArrowRight />
                   </button>
-                  <Link className="btn btn-outline-secondary btn-lg" to="/corporativos">
-                    Volver a corporativos
-                  </Link>
-                </div>
-
-                <div className="text-muted small mt-3">
-                  * El servicio se controla por URL (estable y recargable).
                 </div>
               </Card.Body>
             </Card>

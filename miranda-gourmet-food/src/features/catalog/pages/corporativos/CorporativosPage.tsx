@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Badge, Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Badge, Button, Card, Col, Container, Row, Image } from "react-bootstrap";
 import { BsArrowRight, BsCheck2Circle, BsClock, BsPeople, BsStars } from "react-icons/bs";
 import ServiceModals from "../../components/ServicesModals";
 import { offeringsMock } from "../../data/offerings.mock";
@@ -151,11 +151,17 @@ export default function CorporativosPage() {
                 <div className="text-uppercase small fw-semibold mb-2 corp-eyebrow">
                   Servicios corporativos · catering profesional
                 </div>
-
-                <h1 className="display-5 fw-semibold mb-2">
-                  Catering corporativo <span className="corp-underline">premium</span> para eventos impecables.
-                </h1>
-
+                <Row>
+                  <Col lg={5} className="d-flex justify-content-center align-items-center">
+                    <Image src="/assets/pagephotos/Corp.jpeg" rounded width={250} height={300}/>
+                  </Col>
+                  <Col lg={7}>
+                    <h1 className="display-5 fw-semibold mb-2">                  
+                      Catering corporativo <span className="corp-underline">premium</span> para eventos impecables.
+                    </h1>
+                  </Col>
+                </Row>
+                
                 <p className="fs-5 mb-3 corp-lead">
                   Diseñado para empresas: puntualidad, montaje sobrio, y una experiencia gastronómica de alto nivel.
                 </p>
@@ -222,7 +228,7 @@ export default function CorporativosPage() {
                   </div>
 
                   <div className="text-muted small mt-3">
-                    * Si ya sabes qué necesitas, cotiza. Si no, te asesoramos.
+                    * Si ninguno de nuestros paquetes se acomoda a tus necesidades, ve a <Link to={"/quote"}> <u>Cotizar</u>. </Link> 
                   </div>
                 </div>
               </Col>
