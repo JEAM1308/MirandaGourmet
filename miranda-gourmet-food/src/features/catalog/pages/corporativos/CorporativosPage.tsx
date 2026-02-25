@@ -246,7 +246,7 @@ export default function CorporativosPage() {
         <Container className="corp-glass">
           <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
             <div>
-              <h2 className="h4 mb-1">Paquetes corporativos</h2>
+              <h2 className="h4 mb-1">Paquetes pre armados</h2>
               <div className="text-muted">Opciones base para arrancar rápido. Puedes personalizar todo.</div>
             </div>
           </div>

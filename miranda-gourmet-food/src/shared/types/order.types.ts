@@ -12,13 +12,7 @@ export type OrderItemSnapshot = {
   title: string;
   quantity: number;
   unitPriceCents: number;
-  selection: {
-    variantId?: string;
-    people?: number;
-    dateISO?: string;
-    address?: string;
-    notes?: string;
-  };
+  selection: unknown; // backend/store puede guardar cualquier forma; el frontend hace cast al mostrar
 };
 
 export type Order = {

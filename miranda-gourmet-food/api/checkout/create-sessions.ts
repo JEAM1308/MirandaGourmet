@@ -301,13 +301,19 @@ function computeTotalAndSnapshot(items: CheckoutItemDTO[]) {
     // ✅ soportamos TIERED_PER_PERSON con selection estandarizado
     if (offering.pricing.kind === "TIERED_PER_PERSON") {
       const parsed = parseServiceSelection(item.selection);
-      if (!parsed.ok) throw new Error(parsed.error);
+      if (!parsed.ok) {
+        const msg = parsed.error;
+        throw new Error(msg);
+      }
 
       const reqErr = validateOfferingRequirements(offering, parsed.value, now);
       if (reqErr) throw new Error(reqErr);
 
       const priced = priceTieredOffering(offering, parsed.value);
-      if (!priced.ok) throw new Error(priced.error);
+      if (!priced.ok) {
+        const msg = priced.error;
+        throw new Error(msg);
+      }
 
       const unitTotalCents = priced.value.totalCents; // “total del pedido” (no per-person)
       const lineTotal = unitTotalCents * qty;

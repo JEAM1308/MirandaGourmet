@@ -40,7 +40,7 @@ export default function HomePage() {
           <Row className="g-4">
             <Col lg={7}>
               <div className="text-uppercase small fw-semibold mb-2 home-eyebrow">
-                Catering corporativo · experiencias familiares
+                Catering corporativo
               </div>
 
               <h1 className="display-5 fw-semibold mb-2">
@@ -63,11 +63,9 @@ export default function HomePage() {
 
               <div className="d-flex flex-column flex-sm-row gap-2">
                 <Link to="/corporativos" className="btn btn-outline-warning btn-lg">
-                  Servicios corporativos
+                  Servicios corporativos pre armados
                 </Link>
-                <Link to="/familiares" className="btn btn-outline-warning btn-lg">
-                  Eventos familiares
-                </Link>
+
                 <Link to="/quote" className="btn btn-outline-warning btn-lg">
                   Cotizar evento
                 </Link>

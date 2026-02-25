@@ -47,19 +47,9 @@ export default function AppNavbar() {
 
             <Nav.Link
               as={NavLink}
-              to="/familiares"
+              to="/quote"
               onClick={ () => setActiveLink(2)}
               className={`nav-linkItem ${activeLink === 2 ? "active" : ""}`}
-            >
-              Eventos familiares
-            </Nav.Link>
-
-            <Nav.Link
-              as={NavLink}
-              to="/quote"
-              onClick={ () => setActiveLink(3)}
-              className={`nav-linkItem ${activeLink === 3 ? "active" : ""}`}
-              
             >
               Cotizar
             </Nav.Link>

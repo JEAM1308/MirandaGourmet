@@ -12,26 +12,12 @@ import QuotePage from "../../features/catalog/pages/quote/QuotePage";
 import OrderDetailsPage from "../../features/orders/pages/OrderDetailPage";
 
 
-function ComingSoon({ title }: { title: string }) {
-  return (
-    <section className="pageSection">
-      <h1 className="">
-        {title}
-      </h1>
-      <h3 className="text-muted mb-0">
-        En construcción.
-      </h3>
-    </section>
-  );
-}
-
 export default function AppRouter() {
   return (
     <Routes>
       <Route element={<AppShell />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/corporativos" element={<CorporativosPage />} />
-        <Route path="/familiares" element={<ComingSoon title="Eventos familiares" />} />
         <Route path="/quote" element={<QuotePage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
