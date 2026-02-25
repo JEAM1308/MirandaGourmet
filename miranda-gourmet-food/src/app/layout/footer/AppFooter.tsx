@@ -58,7 +58,7 @@ export default function AppFooter() {
 
               <li>
                 
-                <a className="foot-link" href={`mailto:mailto:comercial@mirandagourmetfood.com?subject=${emailSubject}&body=${emailBody}`}>
+                <a className="foot-link" href={`mailto:comercial@mirandagourmetfood.com?subject=${emailSubject}&body=${emailBody}`}>
                   <BsEnvelope /> comercial@mirandagourmetfood.com
                 </a>
               </li>

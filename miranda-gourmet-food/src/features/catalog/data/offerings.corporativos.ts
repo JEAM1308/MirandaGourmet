@@ -8,6 +8,7 @@ export const lunchBoxOffering: Offering = {
   image: { src: "/assets/services/corporativos/lunch-box.jpg", alt: "Lunch Box corporativo" },
 
   pricing: {
+    kind: "TIERED_PER_PERSON",
     currency: "COP",
     model: "per_person_tiered",
     tiers: [
