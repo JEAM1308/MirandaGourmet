@@ -11,5 +11,6 @@
 @import "../features/catalog/pages/home/home.css";
 @import "../features/catalog/pages/corporativos/corporativos.css";
 @import "../features/catalog/pages/quote/quote.css";
+@import "../features/gallery/pages/gallery.css";
 /* modals */
 @import "../features/catalog/components/service-modal.css"

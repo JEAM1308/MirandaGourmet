@@ -61,13 +61,13 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="d-flex flex-column flex-sm-row gap-2">
+              <div className="d-flex flex-column flex-sm-row gap-2 align-items-center justify-content-center">
                 <Link to="/corporativos" className="btn btn-outline-warning btn-lg">
-                  Servicios corporativos pre armados
+                  Ver paquetes predeterminados
                 </Link>
 
                 <Link to="/quote" className="btn btn-outline-warning btn-lg">
-                  Cotizar evento
+                  Cotizar evento personalizado
                 </Link>
               </div>
             </Col>
@@ -106,7 +106,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="text-muted small mt-3">
-                  * Para servicios complejos, usa <strong>Cotizar</strong>.
+                  * Para personalizar tu servicio, usa <strong>Cotizar</strong>.
                 </div>
               </div>
             </Col>

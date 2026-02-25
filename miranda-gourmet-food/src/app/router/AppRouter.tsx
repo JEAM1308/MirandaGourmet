@@ -10,6 +10,7 @@ import HomePage from "../../features/catalog/pages/home/HomePage";
 import CorporativosPage from "../../features/catalog/pages/corporativos/CorporativosPage";
 import QuotePage from "../../features/catalog/pages/quote/QuotePage";
 import OrderDetailsPage from "../../features/orders/pages/OrderDetailPage";
+import GalleryPage from "../../features/catalog/pages/gallery/GalleryPage";
 
 
 export default function AppRouter() {
@@ -18,6 +19,7 @@ export default function AppRouter() {
       <Route element={<AppShell />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/corporativos" element={<CorporativosPage />} />
+        <Route path="/galeria" element={<GalleryPage />} />
         <Route path="/quote" element={<QuotePage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />

@@ -17,7 +17,7 @@ export default function AppFooter() {
           <Col md={6}>
             <div className="foot-brand">Miranda Gourmet Food</div>
             <div className="foot-tagline">
-              Experiencias gastronómicas para eventos corporativos y familiares.
+              Experiencias gastronómicas exclusivas para eventos corporativos.
             </div>
           </Col>
 
@@ -26,17 +26,12 @@ export default function AppFooter() {
             <ul className="foot-linkList">
               <li>
                 <Link to="/corporativos" className="foot-link">
-                  Corporativos
-                </Link>
-              </li>
-              <li>
-                <Link to="/familiares" className="foot-link">
-                  Familiares
+                  Servicios Corporativos
                 </Link>
               </li>
               <li>
                 <Link to="/quote" className="foot-link">
-                  Eventos personalizados
+                  Eventos Personalizados
                 </Link>
               </li>
             </ul>
@@ -73,7 +68,12 @@ export default function AppFooter() {
         <div className="foot-bottomBar">
           <div className="foot-meta">© {year} — Miranda Gourmet Food</div>
           <div className="foot-meta">
-            <a href="https://www.jeamdev.com">Web desarrollada por <span className="foot-dev metal-gold">J.E.A.M Dev</span></a> 
+            <a href="https://www.jeamdev.com"
+            target="_blank"
+            rel="noreferrer"
+            >
+            Web desarrollada por <span className="foot-dev metal-gold">JEAM Dev</span>
+            </a> 
           </div>
         </div>
       </Container>

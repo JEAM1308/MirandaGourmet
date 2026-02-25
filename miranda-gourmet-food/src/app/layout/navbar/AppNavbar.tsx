@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Badge, Container, Nav, Navbar } from "react-bootstrap";
-import { Link, NavLink } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { BsCart } from "react-icons/bs";
 
 import { useCart } from "../../../features/cart/hooks/useCart";
@@ -22,14 +22,18 @@ function cartCount(items: { quantity: number }[]) {
 }
 
 export default function AppNavbar() {
-  const [activeLink, setActiveLink] = useState(0);
   const { state } = useCart();
   const count = useMemo(() => cartCount(state.items), [state.items]);
+  const { pathname } = useLocation();
+
+  const isCorporate = pathname.startsWith("/corporativos");
+  const isQuote = pathname.startsWith("/quote");
+  const isGallery = pathname.startsWith("/galeria");
 
   return (
     <Navbar expand="md" fixed="top" className="nav-navbar" variant="dark">
       <Container>
-        <Navbar.Brand as={Link} to="/" className="nav-brand" onClick={ () => setActiveLink(0)}>
+        <Navbar.Brand as={Link} to="/" className="nav-brand">
           <BrandLogo />
         </Navbar.Brand>
 
@@ -37,26 +41,35 @@ export default function AppNavbar() {
         <Navbar.Collapse id="main-navbar">
           <Nav className="me-auto nav-links">
             <Nav.Link
-              as={NavLink}
+              as={Link}
               to="/corporativos"
-              onClick={ () => setActiveLink(1)}
-              className={`nav-linkItem ${activeLink === 1 ? "active" : ""}`}
+              active={isCorporate}
+              className={`nav-linkItem ${isCorporate ? "active" : ""}`}
             >
               Corporativos
             </Nav.Link>
 
             <Nav.Link
-              as={NavLink}
+              as={Link}
               to="/quote"
-              onClick={ () => setActiveLink(2)}
-              className={`nav-linkItem ${activeLink === 2 ? "active" : ""}`}
+              active={isQuote}
+              className={`nav-linkItem ${isQuote ? "active" : ""}`}
             >
               Cotizar
+            </Nav.Link>
+
+            <Nav.Link
+              as={Link}
+              to="/galeria"
+              active={isGallery}
+              className={`nav-linkItem ${isGallery ? "active" : ""}`}
+            >
+              Galería
             </Nav.Link>
           </Nav>
 
           <div className="nav-actions">
-            <Link to="/cart" className="nav-cartBtn" aria-label="Ir al carrito" onClick={ () => setActiveLink(0)}>
+            <Link to="/cart" className="nav-cartBtn" aria-label="Ir al carrito">
               <BsCart className="nav-cartIcon" />
 
               {count > 0 && (

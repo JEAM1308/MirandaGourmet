@@ -7,17 +7,10 @@ import { saveCheckout, type CheckoutItemSnapshot } from "../_data/checkout.store
 /* -------------------------------------------------------
   Tipos del request (backend-safe)
 -------------------------------------------------------- */
-type ProviderId = "wompi";
-
 type CheckoutItemDTO = {
   offeringId: string;
   quantity: number; // para estos servicios normalmente 1
   selection: unknown; // ✅ backend-safe
-};
-
-type CreateCheckoutSessionRequest = {
-  provider: ProviderId;
-  items: CheckoutItemDTO[];
 };
 
 type CreateCheckoutSessionResponse = { url: string };
@@ -39,11 +32,6 @@ function getString(v: unknown): string | null {
 
 function getNumber(v: unknown): number | null {
   return typeof v === "number" && Number.isFinite(v) ? v : null;
-}
-
-function clampInt(n: number, min: number, max: number) {
-  if (!Number.isFinite(n)) return min;
-  return Math.max(min, Math.min(max, Math.floor(n)));
 }
 
 function isValidISODate(value: string): boolean {
