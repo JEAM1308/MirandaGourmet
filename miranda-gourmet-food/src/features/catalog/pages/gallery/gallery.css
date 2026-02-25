@@ -2,12 +2,15 @@
 .gallery-page {
   position: relative;
   min-height: calc(100vh - var(--nav-height));
-  padding-top: calc(var(--section-padding-top) + 12px);
+  padding-top: 12px;
   padding-bottom: var(--section-padding-bottom);
   background:
     radial-gradient(900px 520px at 12% 16%, rgba(198,168,91,0.16), transparent 60%),
     radial-gradient(900px 520px at 88% 22%, rgba(255,255,255,0.06), transparent 60%),
     linear-gradient(180deg, rgba(8, 10, 14, 0.85), rgba(7, 8, 10, 0.95));
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .gallery-overlay {
@@ -43,6 +46,7 @@
   -webkit-backdrop-filter: blur(6px);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   padding: 0.85rem 1rem;
+  border-radius: 10px;
 }
 
 .gallery-captionText {

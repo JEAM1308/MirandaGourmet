@@ -10,14 +10,24 @@ type GalleryImage = {
 
 // Para actualizar la galería solo agrega/quita URLs aquí.
 const GALLERY_IMAGES: GalleryImage[] = [
-  { src: "/assets/pagephotos/Corp.jpeg", alt: "Evento corporativo", caption: "Eventos corporativos" },
-  { src: "/assets/services/corporativos/eventos.png", alt: "Catering para eventos", caption: "Montajes y logística" },
-  { src: "/assets/services/corporativos/lunch-box.png", alt: "Lunch Box", caption: "Productos" },
+  { src: "/assets/gallery/a.png", alt: "food photos", caption: "Reference: a" },
+  { src: "/assets/gallery/b.png", alt: "food photos", caption: "Reference: b" },
+  { src: "/assets/gallery/c.png", alt: "food photos", caption: "Reference: c" },
+  { src: "/assets/gallery/d.png", alt: "food photos", caption: "Reference: d" },
+  { src: "/assets/gallery/e.png", alt: "food photos", caption: "Reference: e" },
+  { src: "/assets/gallery/f.png", alt: "food photos", caption: "Reference: f" },
+  { src: "/assets/gallery/g.png", alt: "food photos", caption: "Reference: g" },
+  { src: "/assets/gallery/h.jpg", alt: "food photos", caption: "Reference: h" },
+  { src: "/assets/gallery/i.jpg", alt: "food photos", caption: "Reference: i" },
+  { src: "/assets/gallery/j.jpg", alt: "food photos", caption: "Reference: j" },
+  { src: "/assets/gallery/k.jpg", alt: "food photos", caption: "Reference: k" },
+  { src: "/assets/gallery/l.jpg", alt: "food photos", caption: "Reference: l" },
 ];
 
 export default function GalleryPage() {
   return (
-    <section className="gallery-page section">
+    <section className="gallery-page section"
+    style={{ backgroundImage: `url(/assets/bg/gallery/bg.jpg)` }}>
       <div className="gallery-overlay" />
 
       <Container className="gallery-content">

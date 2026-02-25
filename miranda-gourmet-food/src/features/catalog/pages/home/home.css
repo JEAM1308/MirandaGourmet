@@ -1,8 +1,8 @@
 .home-page {
   min-height: calc(100vh - var(--nav-height, 72px));
-  background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
   position: relative;
   background-image: url("/assets/bg/home/hero.png");
 }

@@ -48,7 +48,14 @@ export default function AppNavbar() {
             >
               Corporativos
             </Nav.Link>
-
+            <Nav.Link
+              as={Link}
+              to="/galeria"
+              active={isGallery}
+              className={`nav-linkItem ${isGallery ? "active" : ""}`}
+            >
+              Galería
+            </Nav.Link>
             <Nav.Link
               as={Link}
               to="/quote"
@@ -58,14 +65,6 @@ export default function AppNavbar() {
               Cotizar
             </Nav.Link>
 
-            <Nav.Link
-              as={Link}
-              to="/galeria"
-              active={isGallery}
-              className={`nav-linkItem ${isGallery ? "active" : ""}`}
-            >
-              Galería
-            </Nav.Link>
           </Nav>
 
           <div className="nav-actions">
