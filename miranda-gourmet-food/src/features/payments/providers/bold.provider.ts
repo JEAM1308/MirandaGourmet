@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   BoldEmbeddedCheckoutResult,
   PaymentProvider,
 } from "../types/payments.types";
@@ -18,11 +18,10 @@ type BoldCheckoutSessionResponse = {
 
 export const boldProvider: PaymentProvider = {
   id: "bold",
-  // Por ahora solo verificamos que exista la API key pública en el frontend.
   isConfigured: () => Boolean(env.boldApiKey),
 
   startCheckout: async (items: CartItem[]): Promise<BoldEmbeddedCheckoutResult> => {
-    const res = await fetch("/api/checkout/create-session", {
+    const res = await fetch("/api/checkout/create-sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -51,4 +50,3 @@ export const boldProvider: PaymentProvider = {
     };
   },
 };
-

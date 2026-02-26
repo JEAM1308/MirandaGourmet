@@ -1,4 +1,4 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+﻿import type { VercelRequest, VercelResponse } from "@vercel/node";
 import crypto from "crypto";
 
 import { catalog, type CatalogOffering } from "../_data/offerings.catalog";
@@ -10,7 +10,7 @@ import { saveCheckout, type CheckoutItemSnapshot } from "../_data/checkout.store
 type CheckoutItemDTO = {
   offeringId: string;
   quantity: number; // para estos servicios normalmente 1
-  selection: unknown; // ✅ backend-safe
+  selection: unknown; // âœ… backend-safe
 };
 
 type WompiCheckoutSessionResponse = {
@@ -63,7 +63,7 @@ function indexCatalog(items: CatalogOffering[]) {
 const catalogById = indexCatalog(catalog);
 
 /* -------------------------------------------------------
-  ServiceSelection (estandarizado) — backend replica
+  ServiceSelection (estandarizado) â€” backend replica
 -------------------------------------------------------- */
 type MenuId = "basic" | "standard" | "gourmet";
 type DietRestriction = { label: string; qty: number };
@@ -76,7 +76,7 @@ type ServiceSelection = {
     restricted: DietRestriction[];
   };
   notes?: string;
-  // si luego agregas dateISO/address aquí también, lo soportamos:
+  // si luego agregas dateISO/address aquÃ­ tambiÃ©n, lo soportamos:
   dateISO?: string;
   address?: string;
 };
@@ -161,7 +161,7 @@ function computeWaitersRequired(pricing: TieredPricing, totalPeople: number) {
 
 function priceTieredOffering(offering: CatalogOffering, sel: ServiceSelection): ParseResult<{
   totalPeople: number;
-  unitPriceCents: number; // per person ya con menú
+  unitPriceCents: number; // per person ya con menÃº
   baseSubtotalCents: number;
   vegExtraCents: number;
   restExtraCents: number;
@@ -226,7 +226,7 @@ function priceTieredOffering(offering: CatalogOffering, sel: ServiceSelection): 
 }
 
 /* -------------------------------------------------------
-  Validaciones genéricas del offering (DATE/ADDRESS)
+  Validaciones genÃ©ricas del offering (DATE/ADDRESS)
 -------------------------------------------------------- */
 function validateOfferingRequirements(offering: CatalogOffering, sel: ServiceSelection, now: Date): string | null {
   const required = offering.required ?? [];
@@ -299,10 +299,10 @@ function computeTotalAndSnapshot(items: CheckoutItemDTO[]) {
       throw new Error(`Offering "${offering.title}" requires quote; checkout not allowed.`);
     }
 
-    // solo cobramos “total del servicio” (qty normalmente 1)
+    // solo cobramos â€œtotal del servicioâ€ (qty normalmente 1)
     const qty = Math.max(1, Math.floor(item.quantity));
 
-    // ✅ soportamos TIERED_PER_PERSON con selection estandarizado
+    // âœ… soportamos TIERED_PER_PERSON con selection estandarizado
     if (offering.pricing.kind === "TIERED_PER_PERSON") {
       const parsed = parseServiceSelection(item.selection);
       if (!parsed.ok) {
@@ -319,7 +319,7 @@ function computeTotalAndSnapshot(items: CheckoutItemDTO[]) {
         throw new Error(msg);
       }
 
-      const unitTotalCents = priced.value.totalCents; // “total del pedido” (no per-person)
+      const unitTotalCents = priced.value.totalCents; // â€œtotal del pedidoâ€ (no per-person)
       const lineTotal = unitTotalCents * qty;
 
       total += lineTotal;
@@ -335,8 +335,8 @@ function computeTotalAndSnapshot(items: CheckoutItemDTO[]) {
       continue;
     }
 
-    // Si aún tienes cosas legacy con wompiPricing fijo, puedes permitirlo aquí.
-    // Por ahora: explícito para evitar cobros mal calculados.
+    // Si aÃºn tienes cosas legacy con wompiPricing fijo, puedes permitirlo aquÃ­.
+    // Por ahora: explÃ­cito para evitar cobros mal calculados.
     throw new Error(`Offering "${offering.title}" has unsupported pricing kind for Wompi: ${offering.pricing.kind}`);
   }
 
@@ -433,9 +433,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return badRequest(res, "Bold requires minimum amount of 1000 units.");
     }
 
-    const currency: "COP" = "COP";
+    const currency = "COP" as const;
 
-    // orderId debe ser único y con máximo 60 caracteres.
+    // orderId debe ser Ãºnico y con mÃ¡ximo 60 caracteres.
     const orderIdBase = `MGF-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
     const orderId = orderIdBase.slice(0, 60);
 
@@ -462,3 +462,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).send(e instanceof Error ? e.message : "Internal Server Error");
   }
 }
+

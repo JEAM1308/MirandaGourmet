@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   PaymentProvider,
   RedirectCheckoutResult,
 } from "../types/payments.types";
@@ -7,11 +7,10 @@ import { env } from "../../../app/config/env";
 
 export const wompiProvider: PaymentProvider = {
   id: "wompi",
-  isConfigured: () => Boolean(env.wompiPublicKey), // por ahora solo check simple
+  isConfigured: () => Boolean(env.wompiPublicKey),
 
   startCheckout: async (items: CartItem[]): Promise<RedirectCheckoutResult> => {
-    // La creación real de la transacción se hace en serverless (con la private key)
-    const res = await fetch("/api/checkout/create-session", {
+    const res = await fetch("/api/checkout/create-sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

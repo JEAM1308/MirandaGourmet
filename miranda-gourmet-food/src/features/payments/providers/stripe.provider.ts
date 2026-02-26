@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   PaymentProvider,
   RedirectCheckoutResult,
 } from "../types/payments.types";
@@ -6,10 +6,10 @@ import type { CartItem } from "../../cart/types/cart.types";
 
 export const stripeProvider: PaymentProvider = {
   id: "stripe",
-  isConfigured: () => true, // serverless es el que exige STRIPE_SECRET_KEY
+  isConfigured: () => true,
 
   startCheckout: async (items: CartItem[]): Promise<RedirectCheckoutResult> => {
-    const res = await fetch("/api/checkout/create-session", {
+    const res = await fetch("/api/checkout/create-sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

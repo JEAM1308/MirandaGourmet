@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -61,7 +61,7 @@ export default function CartPage() {
       }
     } catch (err) {
       console.error(err);
-      alert("No se pudo iniciar el pago. Verifica la configuración del proveedor.");
+      alert("No se pudo iniciar el pago. Verifica la configuraciÃ³n del proveedor.");
     } finally {
       setIsCheckingOut(false);
     }
@@ -72,7 +72,7 @@ export default function CartPage() {
       ? "Pagar con Wompi"
       : env.paymentProvider === "bold"
       ? "Pagar con Bold"
-      : "Pagar con Stripe";
+      : "Pagar con Bold";
 
   return (
     <section className="cart-page">
@@ -81,7 +81,7 @@ export default function CartPage() {
         <div className="cart-header">
           <div>
             <h1 className="cart-title h3">Carrito</h1>
-            <div className="cart-subtitle">Revisa tu selección antes de pagar.</div>
+            <div className="cart-subtitle">Revisa tu selecciÃ³n antes de pagar.</div>
           </div>
 
           <div>
@@ -99,13 +99,13 @@ export default function CartPage() {
         {state.items.length === 0 ? (
           <div className="cart-panel">
             <div className="cart-panel-body cart-empty">
-              <h2>Tu carrito está vacío</h2>
+              <h2>Tu carrito estÃ¡ vacÃ­o</h2>
               <div className="mb-3" style={{ color: "rgba(255,255,255,0.65)" }}>
-                Cuando agregues un servicio, aparecerá aquí.
+                Cuando agregues un servicio, aparecerÃ¡ aquÃ­.
               </div>
 
               <Link to="/" className="btn btn-outline-warning btn-lg">
-                Ver catálogo
+                Ver catÃ¡logo
               </Link>
             </div>
           </div>
@@ -147,10 +147,10 @@ export default function CartPage() {
                             {item.unitLabel ? `Unidad: ${item.unitLabel}` : "Servicio"}
                           </div>
 
-                          {/* ✅ selection SIEMPRE es ServiceSelection */}
+                          {/* âœ… selection SIEMPRE es ServiceSelection */}
                           <div className="cart-item-details">
                             <div>
-                              <span className="muted">Menú:</span>{" "}
+                              <span className="muted">MenÃº:</span>{" "}
                               <strong>{item.selection.menu}</strong>
                             </div>
 
@@ -191,7 +191,7 @@ export default function CartPage() {
 
                             {item.selection.address && (
                               <div className="mt-1">
-                                <span className="muted">Dirección:</span>{" "}
+                                <span className="muted">DirecciÃ³n:</span>{" "}
                                 <strong>{item.selection.address}</strong>
                               </div>
                             )}
@@ -216,7 +216,7 @@ export default function CartPage() {
                             onClick={() => dispatch({ type: "DECREMENT", payload: { id: item.id } })}
                             disabled={isCheckingOut}
                           >
-                            −
+                            âˆ’
                           </Button>
 
                           <Form.Control
@@ -274,7 +274,7 @@ export default function CartPage() {
                   </div>
 
                   <div className="cart-summary-note">
-                    El total final se calcula en el checkout según precios oficiales.
+                    El total final se calcula en el checkout segÃºn precios oficiales.
                   </div>
 
                   <Button
@@ -286,7 +286,7 @@ export default function CartPage() {
                     {isCheckingOut ? (
                       <>
                         <Spinner size="sm" className="me-2" />
-                        Iniciando pago…
+                        Iniciando pagoâ€¦
                       </>
                     ) : (
                       providerLabel
@@ -305,3 +305,4 @@ export default function CartPage() {
     </section>
   );
 }
+
