@@ -65,9 +65,9 @@ export default function AppFooter() {
           </Col>
         </Row>
 
-        <div className="foot-bottomBar">
-          <div className="foot-meta">© {year} — Miranda Gourmet Food</div>
-          <div className="foot-meta">
+        <div className="foot-bottomBar row">
+          <div className="foot-meta col-sm-12">© {year} — Miranda Gourmet Food</div>
+          <div className="foot-meta col-sm-12">
             <a href="https://www.jeamdev.com"
             target="_blank"
             rel="noreferrer"

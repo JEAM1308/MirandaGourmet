@@ -99,7 +99,10 @@
 
 @media (max-width: 576px) {
   .foot-content {
-    padding: 22px 0 16px;
+    padding-top: 22px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-left: 16px;
   }
 
   .foot-bottomBar {

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+﻿import { useMemo, useState } from "react";
 import { Badge, Container, Nav, Navbar } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { BsCart } from "react-icons/bs";
@@ -25,15 +25,24 @@ export default function AppNavbar() {
   const { state } = useCart();
   const count = useMemo(() => cartCount(state.items), [state.items]);
   const { pathname } = useLocation();
+  const [expanded, setExpanded] = useState(false);
 
   const isCorporate = pathname.startsWith("/corporativos");
   const isQuote = pathname.startsWith("/quote");
   const isGallery = pathname.startsWith("/galeria");
+  const closeNavbar = () => setExpanded(false);
 
   return (
-    <Navbar expand="md" fixed="top" className="nav-navbar" variant="dark">
+    <Navbar
+      expand="md"
+      fixed="top"
+      className="nav-navbar"
+      variant="dark"
+      expanded={expanded}
+      onToggle={(nextExpanded) => setExpanded(Boolean(nextExpanded))}
+    >
       <Container>
-        <Navbar.Brand as={Link} to="/" className="nav-brand">
+        <Navbar.Brand as={Link} to="/" className="nav-brand" onClick={closeNavbar}>
           <BrandLogo />
         </Navbar.Brand>
 
@@ -45,6 +54,7 @@ export default function AppNavbar() {
               to="/corporativos"
               active={isCorporate}
               className={`nav-linkItem ${isCorporate ? "active" : ""}`}
+              onClick={closeNavbar}
             >
               Corporativos
             </Nav.Link>
@@ -53,22 +63,23 @@ export default function AppNavbar() {
               to="/galeria"
               active={isGallery}
               className={`nav-linkItem ${isGallery ? "active" : ""}`}
+              onClick={closeNavbar}
             >
-              Galería
+              Galeria
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/quote"
               active={isQuote}
               className={`nav-linkItem ${isQuote ? "active" : ""}`}
+              onClick={closeNavbar}
             >
               Cotizar
             </Nav.Link>
-
           </Nav>
 
           <div className="nav-actions">
-            <Link to="/cart" className="nav-cartBtn" aria-label="Ir al carrito">
+            <Link to="/cart" className="nav-cartBtn" aria-label="Ir al carrito" onClick={closeNavbar}>
               <BsCart className="nav-cartIcon" />
 
               {count > 0 && (
@@ -83,4 +94,3 @@ export default function AppNavbar() {
     </Navbar>
   );
 }
-
