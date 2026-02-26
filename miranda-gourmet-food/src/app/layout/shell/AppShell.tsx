@@ -18,15 +18,18 @@ export default function AppShell() {
 
       <AppFooter />
 
-      <a
-        className="floating-whatsapp"
-        href={`https://wa.me/573014577319?text=${waText}`}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Contactar por WhatsApp"
-      >
-        <BsWhatsapp />
-      </a>
+      <div className="floating-whatsapp-wrap">
+        <span className="floating-whatsapp-label">¡Hablemos!</span>
+        <a
+          className="floating-whatsapp"
+          href={`https://wa.me/573014577319?text=${waText}`}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Contactar por WhatsApp"
+        >
+          <BsWhatsapp />
+        </a>
+      </div>
     </div>
   );
 }

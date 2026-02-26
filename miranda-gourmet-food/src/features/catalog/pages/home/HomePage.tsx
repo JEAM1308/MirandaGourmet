@@ -54,7 +54,7 @@ export default function HomePage() {
               </p>
 
               <div className="row col-12 d-flex justify-content-center m-2 align-items-center">
-                <div className="col-6 m-1 home-bullets">
+                <div className="col-10 m-1 home-bullets">
                   <TrustPoint icon={iconsMap.sabor} text="Sabor único" />
                   <TrustPoint icon={iconsMap.fiabilidad} text="Fiabilidad demostrada" />
                   <TrustPoint icon={iconsMap.experiencia} text="Experiencia probada" />

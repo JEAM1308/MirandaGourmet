@@ -65,14 +65,14 @@ export default function AppFooter() {
           </Col>
         </Row>
 
-        <div className="foot-bottomBar row">
-          <div className="foot-meta col-sm-12">© {year} — Miranda Gourmet Food</div>
-          <div className="foot-meta col-sm-12">
+        <div className="foot-bottomBar row d-flex align-items-center justify-content-around">
+          <div className="col-12 col-sm-4 d-flex justify-content-center foot-meta">© {year} — Miranda Gourmet Food</div>
+          <div className="col-12 col-sm-4 d-flex justify-content-center">
             <a href="https://www.jeamdev.com"
             target="_blank"
             rel="noreferrer"
             >
-            Web desarrollada por <span className="foot-dev metal-gold">JEAM Dev</span>
+            <span className="foot-meta">Web desarrollada por</span> <span className="metal-gold">JEAM Dev</span>
             </a> 
           </div>
         </div>

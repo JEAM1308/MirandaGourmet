@@ -285,16 +285,8 @@ export default function CorporativosPage() {
 
                   <Card.Footer className="border-0 bg-transparent px-4 pb-3 pt-0 d-flex align-items-center justify-content-evenly gap-2">
                     <Button
-                      variant="outline-light"
-                      onClick={() => setActiveServiceId(s.id)}
-                      className="col-6 fs-6"
-                    >
-                      Ver detalle
-                    </Button>
-
-                    <Button
                       variant="outline-warning"
-                      className="col-6 fs-6 d-flex align-items-center justify-content-center"
+                      className="col-8 fs-6 d-flex align-items-center justify-content-center"
                       onClick={() => setActiveServiceId(s.id)}
                     >
                       Pedir&nbsp;<BsArrowRight />

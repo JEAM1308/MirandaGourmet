@@ -14,10 +14,17 @@
     linear-gradient(180deg, #0b0e13, #07080a);
 }
 
-.floating-whatsapp {
+.floating-whatsapp-wrap {
   position: fixed;
   right: 20px;
   bottom: 20px;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.floating-whatsapp {
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -29,14 +36,33 @@
   font-size: 1.5rem;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.35);
-  z-index: 1100;
   transition: transform 0.15s ease, box-shadow 0.2s ease;
+  animation: whatsapp-pulse 1.8s ease-out infinite;
 }
+
+.floating-whatsapp-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(11, 14, 19, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(10px);
+  animation: whatsapp-label-in 0.45s ease-out 2.4s forwards;
+}
+
 
 .floating-whatsapp:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4);
   color: #ffffff;
+  
 }
 
 .floating-whatsapp:focus-visible {
@@ -44,11 +70,51 @@
   outline-offset: 3px;
 }
 
+@media (max-width: 991.98px) {
+  .floating-whatsapp-label {
+    display: none;
+  }
+}
+
 @media (max-width: 576px) {
-  .floating-whatsapp {
+  .floating-whatsapp-wrap {
     right: 14px;
     bottom: 14px;
+  }
+
+  .floating-whatsapp {
     width: 52px;
     height: 52px;
+  }
+}
+
+@keyframes whatsapp-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45), 0 10px 24px rgba(0, 0, 0, 0.35);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(37, 211, 102, 0), 0 10px 24px rgba(0, 0, 0, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0), 0 10px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+@keyframes whatsapp-label-in {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-whatsapp-label {
+    opacity: 1;
+    transform: none;
+    animation: none;
   }
 }
