@@ -1,8 +1,24 @@
 import type { CartItem } from "../../cart/types/cart.types";
 
-export type CheckoutStartResult = { url: string };
+export type PaymentProviderId = "stripe" | "wompi" | "bold";
 
-export type PaymentProviderId = "stripe" | "wompi";
+export type RedirectCheckoutResult = {
+  kind: "redirect";
+  url: string;
+};
+
+export type BoldEmbeddedCheckoutResult = {
+  kind: "bold-embedded";
+  apiKey: string;
+  amount: number; // monto en unidad de divisa (sin decimales)
+  currency: "COP" | "USD";
+  orderId: string;
+  integritySignature: string;
+  description: string;
+  redirectionUrl: string;
+};
+
+export type CheckoutStartResult = RedirectCheckoutResult | BoldEmbeddedCheckoutResult;
 
 export type PaymentProvider = {
   id: PaymentProviderId;

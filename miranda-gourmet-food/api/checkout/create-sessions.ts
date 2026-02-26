@@ -13,7 +13,23 @@ type CheckoutItemDTO = {
   selection: unknown; // ✅ backend-safe
 };
 
-type CreateCheckoutSessionResponse = { url: string };
+type WompiCheckoutSessionResponse = {
+  provider: "wompi";
+  url: string;
+};
+
+type BoldCheckoutSessionResponse = {
+  provider: "bold";
+  apiKey: string;
+  amount: number;
+  currency: "COP" | "USD";
+  orderId: string;
+  integritySignature: string;
+  description: string;
+  redirectionUrl: string;
+};
+
+type CreateCheckoutSessionResponse = WompiCheckoutSessionResponse | BoldCheckoutSessionResponse;
 
 /* -------------------------------------------------------
   Utils
@@ -340,7 +356,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const provider = getString(body.provider);
     const itemsRaw = (body as Record<string, unknown>).items;
 
-    if (provider !== "wompi") return badRequest(res, "Only provider=wompi is supported.");
+    if (provider !== "wompi" && provider !== "bold") {
+      return badRequest(res, "Only provider=wompi or provider=bold is supported.");
+    }
     if (!Array.isArray(itemsRaw) || itemsRaw.length === 0) return badRequest(res, "Empty cart.");
 
     const items: CheckoutItemDTO[] = itemsRaw.map((x) => {
@@ -355,13 +373,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return { offeringId, quantity, selection };
     });
 
-    const publicKey = process.env.WOMPI_PUBLIC_KEY;
-    const integritySecret = process.env.WOMPI_INTEGRITY_KEY;
-
-    if (!publicKey || !integritySecret) {
-      return res.status(501).send("Wompi is not configured. Set WOMPI_PUBLIC_KEY and WOMPI_INTEGRITY_KEY env vars.");
-    }
-
     const siteUrl = process.env.VITE_PUBLIC_SITE_URL || "http://localhost:3000";
 
     const { totalAmountCents, itemsSnapshot } = computeTotalAndSnapshot(items);
@@ -371,21 +382,80 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     saveCheckout({
       reference,
-      provider: "wompi",
+      provider,
       items: itemsSnapshot,
       totalAmountCents,
       createdAtISO: new Date().toISOString(),
     });
 
-    const url = createWompiRedirectUrl({
-      siteUrl,
-      publicKey,
-      integritySecret,
-      reference,
-      amountInCents: totalAmountCents,
-    });
+    if (provider === "wompi") {
+      const publicKey = process.env.WOMPI_PUBLIC_KEY;
+      const integritySecret = process.env.WOMPI_INTEGRITY_KEY;
 
-    const out: CreateCheckoutSessionResponse = { url };
+      if (!publicKey || !integritySecret) {
+        return res
+          .status(501)
+          .send(
+            "Wompi is not configured. Set WOMPI_PUBLIC_KEY and WOMPI_INTEGRITY_KEY env vars.",
+          );
+      }
+
+      const url = createWompiRedirectUrl({
+        siteUrl,
+        publicKey,
+        integritySecret,
+        reference,
+        amountInCents: totalAmountCents,
+      });
+
+      const out: CreateCheckoutSessionResponse = {
+        provider: "wompi",
+        url,
+      };
+
+      return res.status(200).json(out);
+    }
+
+    // Bold Embedded Checkout
+    const boldApiKey = process.env.BOLD_API_KEY;
+    const boldSecretKey = process.env.BOLD_SECRET_KEY;
+
+    if (!boldApiKey || !boldSecretKey) {
+      return res
+        .status(501)
+        .send("Bold is not configured. Set BOLD_API_KEY and BOLD_SECRET_KEY env vars.");
+    }
+
+    // Bold espera el monto en unidades de divisa (sin decimales).
+    const amount = Math.round(totalAmountCents / 100);
+
+    if (amount < 1000) {
+      return badRequest(res, "Bold requires minimum amount of 1000 units.");
+    }
+
+    const currency: "COP" = "COP";
+
+    // orderId debe ser único y con máximo 60 caracteres.
+    const orderIdBase = `MGF-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
+    const orderId = orderIdBase.slice(0, 60);
+
+    const raw = `${orderId}${amount}${currency}${boldSecretKey}`;
+    const integritySignature = crypto.createHash("sha256").update(raw).digest("hex");
+
+    const redirectionUrl = `${siteUrl}/checkout/success`;
+    const description = "Reserva de catering Miranda Gourmet";
+
+    const out: CreateCheckoutSessionResponse = {
+      provider: "bold",
+      apiKey: boldApiKey,
+      amount,
+      currency,
+      orderId,
+      integritySignature,
+      description,
+      redirectionUrl,
+    };
+
     return res.status(200).json(out);
   } catch (e) {
     console.error(e);

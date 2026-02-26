@@ -10,6 +10,7 @@ import type { Offering } from "../../catalog/types/offering.types";
 import { offeringsMock } from "../../catalog/data/offerings.mock";
 
 import { startCheckout } from "../../payments/services/payments.services";
+import { openBoldEmbeddedCheckout } from "../../payments/utils/boldCheckout";
 import { env } from "../../../app/config/env";
 
 function formatCOPFromCents(amountCents: number) {
@@ -51,8 +52,13 @@ export default function CartPage() {
 
     setIsCheckingOut(true);
     try {
-      const { url } = await startCheckout(state.items);
-      window.location.href = url;
+      const result = await startCheckout(state.items);
+
+      if (result.kind === "redirect") {
+        window.location.href = result.url;
+      } else if (result.kind === "bold-embedded") {
+        await openBoldEmbeddedCheckout(result);
+      }
     } catch (err) {
       console.error(err);
       alert("No se pudo iniciar el pago. Verifica la configuración del proveedor.");
@@ -62,7 +68,11 @@ export default function CartPage() {
   };
 
   const providerLabel =
-    env.paymentProvider === "wompi" ? "Pagar con Wompi" : "Pagar con Stripe";
+    env.paymentProvider === "wompi"
+      ? "Pagar con Wompi"
+      : env.paymentProvider === "bold"
+      ? "Pagar con Bold"
+      : "Pagar con Stripe";
 
   return (
     <section className="cart-page">

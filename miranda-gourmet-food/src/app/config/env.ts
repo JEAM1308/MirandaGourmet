@@ -4,13 +4,17 @@ const required = <T extends string>(v: T | undefined, name: string): T => {
 };
 
 export const env = {
-  paymentProvider: (import.meta.env.VITE_PAYMENT_PROVIDER as "stripe" | "wompi") ?? "stripe",
+  paymentProvider:
+    (import.meta.env.VITE_PAYMENT_PROVIDER as "stripe" | "wompi" | "bold") ?? "stripe",
 
   // Stripe
   stripePublishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string | undefined,
 
   // Wompi (solo pública va en frontend; privadas en serverless)
   wompiPublicKey: import.meta.env.VITE_WOMPI_PUBLIC_KEY as string | undefined,
+
+  // Bold (solo pública va en frontend; privadas en serverless)
+  boldApiKey: import.meta.env.VITE_BOLD_API_KEY as string | undefined,
 
   siteUrl: required(import.meta.env.VITE_PUBLIC_SITE_URL, "VITE_PUBLIC_SITE_URL"),
 };
