@@ -1,11 +1,10 @@
-﻿import type { CartItem } from "../../cart/types/cart.types";
-import { env } from "../../../app/config/env";
+import type { CartItem } from "../../cart/types/cart.types";
+
 import type { CheckoutStartResult } from "../types/payments.types";
-import { wompiProvider } from "../providers/wompi.provider";
 import { boldProvider } from "../providers/bold.provider";
 
 export async function startCheckout(items: CartItem[]): Promise<CheckoutStartResult> {
-  const provider = env.paymentProvider === "wompi" ? wompiProvider : boldProvider;
+  const provider = boldProvider;
 
   if (!provider.isConfigured()) {
     throw new Error(

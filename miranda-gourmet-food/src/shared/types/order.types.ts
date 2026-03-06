@@ -1,4 +1,4 @@
-export type PaymentProvider = "stripe" | "wompi";
+export type PaymentProvider = "bold";
 
 export type OrderStatus =
   | "PENDING"

@@ -1,6 +1,6 @@
 import type { CartItem } from "../../cart/types/cart.types";
 
-export type PaymentProviderId = "stripe" | "wompi" | "bold";
+export type PaymentProviderId = "bold";
 
 export type RedirectCheckoutResult = {
   kind: "redirect";

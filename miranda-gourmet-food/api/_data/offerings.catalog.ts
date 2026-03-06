@@ -12,8 +12,6 @@ export type CatalogOffering = {
    * - TIERED_PER_PERSON: servicios estandarizados (dinámicos) 
    */
   pricing:
-    | { kind: "STRIPE_PRICE"; stripePriceId: string }
-    | { kind: "STRIPE_VARIANTS"; variants: Record<string, string> }
     | { kind: "QUOTE" }
     | {
         kind: "TIERED_PER_PERSON";
@@ -53,15 +51,7 @@ export type CatalogOffering = {
         };
       };
 
-  // Stripe addons (si los usas en productos fijos)
-  addons?: Record<string, string>; // addonId -> stripePriceId
 
-  // Wompi legacy (si usas montos fijos por offering)
-  wompiPricing?:
-    | { kind: "AMOUNT"; amountInCents: number }
-    | { kind: "VARIANTS"; variants: Record<string, number> };
-
-  wompiAddons?: Record<string, number>;
 
   quantitySource: "ITEM_QTY" | "PEOPLE";
   minLeadTimeHours?: number;
@@ -250,17 +240,5 @@ export const catalog: CatalogOffering[] = [
     required: ["DATE", "ADDRESS"],
   },
 
-  /**
-   * Si aún tienes productos “legacy” con Stripe fijo,
-   * los puedes seguir metiendo aquí SIN problema.
-   *
-   * Ej:
-   * {
-   *   id: "algo-stripe",
-   *   title: "Producto fijo",
-   *   type: "STANDARD_SERVICE",
-   *   pricing: { kind: "STRIPE_PRICE", stripePriceId: "price_..." },
-   *   quantitySource: "ITEM_QTY",
-   * }
-   */
+
 ];

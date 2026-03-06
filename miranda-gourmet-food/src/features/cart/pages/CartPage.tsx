@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -11,7 +11,7 @@ import { offeringsMock } from "../../catalog/data/offerings.mock";
 
 import { startCheckout } from "../../payments/services/payments.services";
 import { openBoldEmbeddedCheckout } from "../../payments/utils/boldCheckout";
-import { env } from "../../../app/config/env";
+
 
 function formatCOPFromCents(amountCents: number) {
   const amount = amountCents / 100;
@@ -67,12 +67,7 @@ export default function CartPage() {
     }
   };
 
-  const providerLabel =
-    env.paymentProvider === "wompi"
-      ? "Pagar con Wompi"
-      : env.paymentProvider === "bold"
-      ? "Pagar con Bold"
-      : "Pagar con Bold";
+  const providerLabel = "Pagar con Bold";
 
   return (
     <section className="cart-page">

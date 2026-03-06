@@ -3,7 +3,7 @@ import { Alert, Badge, Card, Container, Spinner } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 
 type OrderStatus = "PENDING" | "APPROVED" | "DECLINED" | "VOIDED" | "ERROR";
-type PaymentProvider = "stripe" | "wompi";
+type PaymentProvider = "bold";
 
 type OrderItemSnapshot = {
   offeringId: string;

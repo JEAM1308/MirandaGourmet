@@ -8,7 +8,7 @@ export type CheckoutItemSnapshot = {
 };
 export type CheckoutRecord = {
   reference: string;
-  provider: "wompi" | "stripe" | "bold";
+  provider: "bold";
   items: CheckoutItemSnapshot[];
   totalAmountCents: number;
   createdAtISO: string;

@@ -1,4 +1,4 @@
-﻿import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import crypto from "crypto";
 
 import { catalog, type CatalogOffering } from "../_data/offerings.catalog";
@@ -13,10 +13,6 @@ type CheckoutItemDTO = {
   selection: unknown; // âœ… backend-safe
 };
 
-type WompiCheckoutSessionResponse = {
-  provider: "wompi";
-  url: string;
-};
 
 type BoldCheckoutSessionResponse = {
   provider: "bold";
@@ -29,7 +25,7 @@ type BoldCheckoutSessionResponse = {
   redirectionUrl: string;
 };
 
-type CreateCheckoutSessionResponse = WompiCheckoutSessionResponse | BoldCheckoutSessionResponse;
+type CreateCheckoutSessionResponse = BoldCheckoutSessionResponse;
 
 /* -------------------------------------------------------
   Utils
@@ -250,37 +246,6 @@ function validateOfferingRequirements(offering: CatalogOffering, sel: ServiceSel
   return null;
 }
 
-/* -------------------------------------------------------
-  WOMPI: firma + URL (pagas total de una vez)
--------------------------------------------------------- */
-function wompiSignature(reference: string, amountInCents: number, currency: "COP", integritySecret: string) {
-  const raw = `${reference}${amountInCents}${currency}${integritySecret}`;
-  return crypto.createHash("sha256").update(raw).digest("hex");
-}
-
-function createWompiRedirectUrl(params: {
-  siteUrl: string;
-  publicKey: string;
-  integritySecret: string;
-  reference: string;
-  amountInCents: number;
-  currency?: "COP";
-}) {
-  const currency = params.currency ?? "COP";
-  const signature = wompiSignature(params.reference, params.amountInCents, currency, params.integritySecret);
-
-  const redirectUrl = `${params.siteUrl}/checkout/wompi-result`;
-
-  const url = new URL(`${params.siteUrl}/pay/wompi`);
-  url.searchParams.set("publicKey", params.publicKey);
-  url.searchParams.set("currency", currency);
-  url.searchParams.set("amountInCents", String(params.amountInCents));
-  url.searchParams.set("reference", params.reference);
-  url.searchParams.set("signature", signature);
-  url.searchParams.set("redirectUrl", redirectUrl);
-
-  return url.toString();
-}
 
 /* -------------------------------------------------------
   Main: compute total + snapshot (solo tiered por ahora)
@@ -335,9 +300,7 @@ function computeTotalAndSnapshot(items: CheckoutItemDTO[]) {
       continue;
     }
 
-    // Si aÃºn tienes cosas legacy con wompiPricing fijo, puedes permitirlo aquÃ­.
-    // Por ahora: explÃ­cito para evitar cobros mal calculados.
-    throw new Error(`Offering "${offering.title}" has unsupported pricing kind for Wompi: ${offering.pricing.kind}`);
+
   }
 
   return { totalAmountCents: total, itemsSnapshot: snapshot };
@@ -356,8 +319,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const provider = getString(body.provider);
     const itemsRaw = (body as Record<string, unknown>).items;
 
-    if (provider !== "wompi" && provider !== "bold") {
-      return badRequest(res, "Only provider=wompi or provider=bold is supported.");
+    if (provider !== "bold") {
+      return badRequest(res, "Only provider=bold is supported.");
     }
     if (!Array.isArray(itemsRaw) || itemsRaw.length === 0) return badRequest(res, "Empty cart.");
 
@@ -388,33 +351,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       createdAtISO: new Date().toISOString(),
     });
 
-    if (provider === "wompi") {
-      const publicKey = process.env.WOMPI_PUBLIC_KEY;
-      const integritySecret = process.env.WOMPI_INTEGRITY_KEY;
-
-      if (!publicKey || !integritySecret) {
-        return res
-          .status(501)
-          .send(
-            "Wompi is not configured. Set WOMPI_PUBLIC_KEY and WOMPI_INTEGRITY_KEY env vars.",
-          );
-      }
-
-      const url = createWompiRedirectUrl({
-        siteUrl,
-        publicKey,
-        integritySecret,
-        reference,
-        amountInCents: totalAmountCents,
-      });
-
-      const out: CreateCheckoutSessionResponse = {
-        provider: "wompi",
-        url,
-      };
-
-      return res.status(200).json(out);
-    }
 
     // Bold Embedded Checkout
     const boldApiKey = process.env.BOLD_API_KEY;
