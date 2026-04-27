@@ -16,8 +16,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(900px 500px at 15% 10%, rgba(198,168,91,0.10), transparent 60%),
-    linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.0));
+    radial-gradient(900px 500px at 15% 10%, rgba(198, 168, 91, 0.10), transparent 60%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.0));
 }
 
 .corp-content {
@@ -26,34 +26,34 @@
 }
 
 .corp-glass {
-  background: rgba(0,0,0,0.7);
-  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 20px;
   backdrop-filter: blur(8px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
   padding: 1.1rem;
 }
 
 .corp-eyebrow {
-  color: rgba(255,255,255,0.65);
+  color: rgba(255, 255, 255, 0.65);
   letter-spacing: 0.06em;
 }
 
 .corp-underline {
   text-decoration: underline;
   text-underline-offset: 6px;
-  text-decoration-color: rgba(198,168,91,0.9);
+  text-decoration-color: rgba(198, 168, 91, 0.9);
 }
 
 .corp-lead {
-  color: rgba(255,255,255,0.78);
+  color: rgba(255, 255, 255, 0.78);
   max-width: 60ch;
   font-size: 1rem;
 }
 
 .corp-glassCard {
-  background: rgba(255,255,255,0.06) !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   backdrop-filter: blur(10px) !important;
   border-radius: 16px !important;
 }
@@ -64,7 +64,7 @@
   gap: 8px;
   font-weight: 600;
   margin-bottom: 6px;
-  color: rgba(198,168,91,0.9);
+  color: rgba(198, 168, 91, 0.9);
 }
 
 .corp-icon {
@@ -75,8 +75,8 @@
 }
 
 .corp-sideCard {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
   backdrop-filter: blur(10px);
   padding: 1rem;
@@ -86,7 +86,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  color: rgba(255,255,255,0.78);
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .corp-checkList li {
@@ -117,45 +117,45 @@
 
 /* IMPORTANT: forzar look premium (evita blanco Bootstrap) */
 .corp-packageCard {
-  background: rgba(255,255,255,0.04) !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
   backdrop-filter: blur(8px);
   border-radius: 18px;
-  color: rgba(255,255,255,0.92);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .corp-badge {
-  background: rgba(198,168,91,0.95) !important;
+  background: rgba(198, 168, 91, 0.95) !important;
   color: #0b0e13 !important;
-  border: 1px solid rgba(0,0,0,0.35) !important;
+  border: 1px solid rgba(0, 0, 0, 0.35) !important;
 }
 
 .corp-bullets {
-  color: rgba(255,255,255,0.72);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .corp-glassPanel {
-  background: rgba(255,255,255,0.05) !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
   backdrop-filter: blur(100px);
   border-radius: 18px;
-  color: rgba(255,255,255,0.92);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .corp-quote {
-  color: rgba(255,255,255,0.86);
+  color: rgba(255, 255, 255, 0.86);
   font-weight: 500;
   line-height: 1.5;
 }
 
 .corp-ctaCard {
   background:
-    radial-gradient(900px 420px at 10% 10%, rgba(198,168,91,0.10), transparent 60%),
-    rgba(255,255,255,0.04) !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
+    radial-gradient(900px 420px at 10% 10%, rgba(198, 168, 91, 0.10), transparent 60%),
+    rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
   border-radius: 20px;
   backdrop-filter: blur(10px);
-  color: rgba(255,255,255,0.92);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .corp-stepBubble {
@@ -173,35 +173,60 @@
 
 /* Responsive */
 @media (max-width: 576px) {
-  .corp-glass { padding: 1rem; }
-  .corp-section { padding: 40px 0; }
-  .corp-sectionTight { padding: 28px 0; }
-  .corp-sideCard { margin-top: 12px; }
+  .corp-glass {
+    padding: 1rem;
+  }
+
+  .corp-section {
+    padding: 40px 0;
+  }
+
+  .corp-sectionTight {
+    padding: 28px 0;
+  }
+
+  .corp-sideCard {
+    margin-top: 12px;
+  }
 
   /* botones grandes full width */
-  .corp-glass .btn-lg { width: 100%; }
+  .corp-glass .btn-lg {
+    width: 100%;
+  }
 }
 
 @media (min-width: 992px) {
-  .corp-page { padding: 28px 0; }
-  .corp-glass { padding: 2rem; }
-  .corp-lead { font-size: 1.125rem; }
-  .corp-sideCard { padding: 1.25rem; }
+  .corp-page {
+    padding: 28px 0;
+  }
+
+  .corp-glass {
+    padding: 2rem;
+  }
+
+  .corp-lead {
+    font-size: 1.125rem;
+  }
+
+  .corp-sideCard {
+    padding: 1.25rem;
+  }
 }
+
 /* =========================
    Modal (service detail)
 ========================= */
 
 .corp-modal {
   background: rgba(12, 14, 18, 0.92);
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 18px;
   backdrop-filter: blur(14px);
-  color: rgba(255,255,255,0.92);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .corp-modalHeader {
-  border-bottom: 1px solid rgba(255,255,255,0.10);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
   background: transparent;
 }
 
@@ -211,7 +236,7 @@
 }
 
 .corp-modalSub {
-  color: rgba(255,255,255,0.65);
+  color: rgba(255, 255, 255, 0.65);
   font-weight: 500;
 }
 
@@ -223,7 +248,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   margin-bottom: 14px;
 }
 
@@ -238,12 +263,10 @@
 .corp-modalImgOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0,0,0,0.15) 0%,
-    rgba(0,0,0,0.35) 55%,
-    rgba(0,0,0,0.60) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0.15) 0%,
+      rgba(0, 0, 0, 0.35) 55%,
+      rgba(0, 0, 0, 0.60) 100%);
   pointer-events: none;
 }
 
@@ -254,7 +277,7 @@
 }
 
 .corp-modalIntro {
-  color: rgba(255,255,255,0.78);
+  color: rgba(255, 255, 255, 0.78);
   margin: 8px 0 16px;
   line-height: 1.5;
 }
@@ -264,14 +287,14 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   font-size: 0.82rem;
-  color: rgba(255,255,255,0.72);
+  color: rgba(255, 255, 255, 0.72);
   margin-bottom: 10px;
 }
 
 .corp-modalList {
   margin: 0;
   padding-left: 18px;
-  color: rgba(255,255,255,0.78);
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .corp-modalList li {
@@ -281,21 +304,23 @@
 .corp-modalNotes {
   margin-top: 14px;
   padding-top: 12px;
-  border-top: 1px solid rgba(255,255,255,0.10);
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 .corp-modalNote {
-  color: rgba(255,255,255,0.62);
+  color: rgba(255, 255, 255, 0.62);
   font-size: 0.9rem;
   margin-bottom: 6px;
 }
 
 .corp-modalFooter {
-  border-top: 1px solid rgba(255,255,255,0.10);
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
   background: transparent;
 }
 
 /* Responsive */
 @media (max-width: 576px) {
-  .corp-modalImg { height: 190px; }
+  .corp-modalImg {
+    height: 190px;
+  }
 }
